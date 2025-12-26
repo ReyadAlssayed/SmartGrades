@@ -1,0 +1,170 @@
+﻿@page "/Register"
+@layout AuthLayout
+@inject SmartGrades.Services.DataServices DataServices
+@inject NavigationManager Nav
+
+<div class="register-box">
+
+    <!-- LOGO -->
+    <div class="logo-box">
+        <img src="images/logo.jpg"
+             alt="SmartGrades Logo"
+             width="88"
+             height="88" />
+    </div>
+
+    <!-- TITLE -->
+    <h2 class="title">عمل حساب جديد</h2>
+
+    <!-- FULL NAME -->
+    <div class="field">
+        <label>اسم الأستاذ</label>
+        <input placeholder="اكتب اسمك الكامل"
+               maxlength="30"
+               @bind="fullName" />
+    </div>
+
+    <!-- PASSWORD -->
+    <div class="field">
+        <label>كلمة المرور</label>
+        <input type="password"
+               placeholder="أدخل كلمة المرور"
+               maxlength="30"
+               @bind="password" />
+    </div>
+
+    <!-- CONFIRM PASSWORD -->
+    <div class="field">
+        <label>تأكيد كلمة المرور</label>
+        <input type="password"
+               placeholder="أعد إدخال كلمة المرور"
+               maxlength="30"
+               @bind="confirmPassword" />
+    </div>
+
+    <!-- BUTTON -->
+    <button @onclick="CreateAccount">عمل حساب</button>
+
+    <!-- LOGIN LINK -->
+    <div class="login-hint">
+        هل تمتلك حساب معنا؟
+        <a href="/">تسجيل الدخول</a>
+    </div>
+
+</div>
+
+@if (showDialog)
+{
+    <div class="dialog-overlay">
+        <div class="dialog-box @dialogType">
+            <div class="dialog-icon">@dialogIcon</div>
+            <p>@dialogMessage</p>
+            <button @onclick="CloseDialog">حسناً</button>
+        </div>
+    </div>
+}
+
+@code {
+    string fullName = string.Empty;
+    string password = string.Empty;
+    string confirmPassword = string.Empty;
+
+    bool showDialog = false;
+    bool redirectAfterClose = false;
+
+    string dialogMessage = string.Empty;
+    string dialogType = string.Empty;
+    string dialogIcon = string.Empty;
+
+    async Task CreateAccount()
+    {
+        if (string.IsNullOrWhiteSpace(fullName))
+        {
+            ShowError("انتبه، اسم الأستاذ مطلوب");
+            return;
+        }
+
+        if (fullName.Length > 30)
+        {
+            ShowError("اسم الأستاذ يجب ألا يتجاوز 30 حرفًا");
+            return;
+        }
+
+        if (password.Length < 6 || password.Length > 30)
+        {
+            ShowError("كلمة المرور يجب أن تكون بين 6 و 30 حرفًا");
+            return;
+        }
+
+        if (password != confirmPassword)
+        {
+            ShowError("كلمتا المرور غير متطابقتين");
+            return;
+        }
+
+        try
+        {
+            var exists = await DataServices.TeacherNameExistsAsync(fullName);
+            if (exists)
+            {
+                ShowError("عفواً، هذا الاسم مسجّل مسبقًا");
+                return;
+            }
+
+            var teacher = new SmartGrades.Model.Teacher
+            {
+                FullName = fullName,
+                Password = password
+            };
+
+            var success = await DataServices.CreateTeacherAsync(teacher);
+
+            if (success)
+            {
+                ShowSuccess("تم إنشاء الحساب بنجاح، اضغط حسناً للانتقال لتسجيل الدخول");
+
+                fullName = string.Empty;
+                password = string.Empty;
+                confirmPassword = string.Empty;
+
+                redirectAfterClose = true;
+            }
+            else
+            {
+                ShowError("حدث خطأ أثناء إنشاء الحساب");
+            }
+        }
+        catch
+        {
+            ShowError("تعذر الاتصال بالخادم، تحقق من الاتصال بالإنترنت");
+        }
+    }
+
+    void ShowError(string text)
+    {
+        dialogMessage = text;
+        dialogType = "error";
+        dialogIcon = "✖";
+        showDialog = true;
+        redirectAfterClose = false;
+    }
+
+    void ShowSuccess(string text)
+    {
+        dialogMessage = text;
+        dialogType = "success";
+        dialogIcon = "✔";
+        showDialog = true;
+    }
+
+    void CloseDialog()
+    {
+        showDialog = false;
+
+        if (redirectAfterClose)
+        {
+            redirectAfterClose = false;
+            Nav.NavigateTo("/", true);
+        }
+    }
+}

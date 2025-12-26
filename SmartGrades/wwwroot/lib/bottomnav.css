@@ -1,0 +1,72 @@
+﻿.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 64px;
+    background-color: #ffffff;
+    border-top: 1px solid #e5e7eb;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    padding-bottom: env(safe-area-inset-bottom);
+    /* لمسة عمق أنيقة */
+    box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    z-index: 1000;
+}
+
+.nav-item {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    border-radius: 50%;
+    /* حركة ناعمة جدًا */
+    transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .nav-item img {
+        width: 24px;
+        height: 24px;
+        /* نعومة بصرية */
+        transition: transform 0.2s ease;
+    }
+
+    /* ✨ الحالة النشطة */
+    .nav-item.active {
+        background-color: #f3f4f6;
+        /* ارتفاع خفيف */
+        transform: translateY(-6px);
+        /* ظل أوضح ولكن نظيف */
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.22), 0 2px 6px rgba(0, 0, 0, 0.12);
+    }
+
+/* تكبير بسيط للأيقونة النشطة */
+a.nav-item.active img {
+    transform: scale(1.1);
+}
+
+/* عند الضغط */
+.nav-item:active {
+    transform: scale(0.92);
+}
+
+/* Tablet */
+@media (min-width: 600px) {
+    .bottom-nav {
+        height: 70px;
+    }
+
+    .nav-item {
+        width: 54px;
+        height: 54px;
+    }
+
+        .nav-item img {
+            width: 26px;
+            height: 26px;
+        }
+}

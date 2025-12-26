@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>SmartGrades</title>
+    <base href="/" />
+
+    <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="app.css" />
+    <link rel="stylesheet" href="SmartGrades.styles.css" />
+    <link rel="icon" href="data:,">
+
+    <link rel="preload" href="images/logo.jpg" as="image">
+    <link rel="preload" href="images/rocket.jpg" as="image">
+
+    <link rel="stylesheet" href="lib/register.css" />
+    <link rel="stylesheet" href="lib/login.css" />
+    <link rel="stylesheet" href="lib/home.css" />
+    <link rel="stylesheet" href="lib/bottomnav.css" />
+    <link rel="stylesheet" href="lib/settings.css" />
+</head>
+
+<body>
+
+    <div class="status-bar-safe-area"></div>
+
+    <!-- Blazor root -->
+    <div id="app">
+        <div class="app-loading">
+            <div class="loader"></div>
+            <div class="loading-text">
+                جارٍ تشغيل SmartGrades…
+            </div>
+        </div>
+    </div>
+
+    <div id="blazor-error-ui" data-nosnippet>
+        An unhandled error has occurred.
+        <a href="." class="reload">Reload</a>
+        <span class="dismiss">🗙</span>
+    </div>
+
+    <script src="_framework/blazor.webview.js" autostart="false"></script>
+</body>
+</html>

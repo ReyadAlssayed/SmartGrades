@@ -1,0 +1,160 @@
+﻿@page "/Settings"
+@layout MainLayout
+
+@inject SmartGrades.Services.DataServices DataServices
+@inject NavigationManager Nav
+
+<div class="settings-page">
+
+    <!-- Header -->
+    <div class="settings-header">
+        <div class="header-content">
+
+            <div class="avatar image-avatar">
+                <img src="images/teacher.png" />
+            </div>
+
+            <div class="user-info">
+                <div class="user-name">
+                    @TeacherName <span class="user-role"> — أستاذ</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Settings List -->
+    <div class="settings-list">
+
+        <div class="settings-item" @onclick="() => ShowProfileDialog = true">
+            <span>الملف الشخصي</span>
+            <span class="arrow">›</span>
+        </div>
+
+        <div class="settings-item" @onclick="() => ShowPasswordDialog = true">
+            <span>تغيير كلمة المرور</span>
+            <span class="arrow">›</span>
+        </div>
+
+        <div class="settings-item" @onclick="OpenAbout">
+            <span>حول التطبيق</span>
+            <span class="arrow">›</span>
+        </div>
+
+        <button class="logout-btn" @onclick="Logout">
+            تسجيل الخروج
+        </button>
+
+    </div>
+</div>
+
+<!-- ================= PROFILE DIALOG ================= -->
+@if (ShowProfileDialog)
+{
+    <div class="dialog-overlay">
+        <div class="dialog-box">
+
+            <h3>الملف الشخصي</h3>
+
+            <p><strong>الاسم:</strong> @TeacherName</p>
+            <p><strong>الدور:</strong> أستاذ</p>
+
+            <button class="dialog-close" @onclick="() => ShowProfileDialog = false">
+                إغلاق
+            </button>
+
+        </div>
+    </div>
+}
+
+<!-- ================= PASSWORD DIALOG ================= -->
+@if (ShowPasswordDialog)
+{
+    <div class="dialog-overlay">
+        <div class="dialog-box">
+
+            <h3>تغيير كلمة المرور</h3>
+
+            <input type="password" placeholder="كلمة المرور الحالية" />
+            <input type="password" placeholder="كلمة المرور الجديدة" />
+            <input type="password" placeholder="تأكيد كلمة المرور الجديدة" />
+
+            <button class="dialog-action">
+                حفظ التغيير
+            </button>
+
+            <button class="dialog-close" @onclick="() => ShowPasswordDialog = false">
+                إغلاق
+            </button>
+
+        </div>
+    </div>
+}
+
+<!-- ================= ABOUT DIALOG ================= -->
+@if (ShowAboutDialog)
+{
+    <div class="dialog-overlay">
+        <div class="dialog-box dialog-medium">
+
+            <h3>حول SmartGrades</h3>
+            <video class="about-video"
+                   autoplay
+                   muted
+                   playsinline
+                   controls
+                   @onended="OnVideoEnded">
+
+                <source src="images/video1.mp4" type="video/mp4" />
+                المتصفح لا يدعم تشغيل الفيديو
+            </video>
+
+
+            @if (ShowAboutText)
+            {
+                <div class="about-text">
+                    SmartGrades نظام ذكي لإدارة الدرجات ومتابعة الطلاب،
+                    صُمم ليكون بسيطًا، سريعًا، وآمنًا للأساتذة.
+                </div>
+            }
+
+            <button class="dialog-close" @onclick="CloseAbout">
+                إغلاق
+            </button>
+
+        </div>
+    </div>
+}
+
+@code {
+
+    bool ShowProfileDialog = false;
+    bool ShowPasswordDialog = false;
+    bool ShowAboutDialog = false;
+    bool ShowAboutText = false;
+
+    string TeacherName => DataServices.CurrentTeacher?.FullName ?? "—";
+
+    void OpenAbout()
+    {
+        ShowAboutDialog = true;
+        ShowAboutText = false;
+    }
+
+    void OnVideoEnded()
+    {
+        ShowAboutText = true;
+    }
+
+    void CloseAbout()
+    {
+        ShowAboutDialog = false;
+        ShowAboutText = false;
+    }
+
+    void Logout()
+    {
+        DataServices.Logout();
+        Nav.NavigateTo("/", true);
+    }
+}

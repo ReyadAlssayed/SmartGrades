@@ -1,0 +1,207 @@
+﻿* {
+    box-sizing: border-box;
+    font-family: system-ui, -apple-system, "Segoe UI", Tahoma, Arial, sans-serif;
+}
+
+/* الخلفية */
+.page-auth {
+    min-height: 100vh;
+    background: #0f3d4c;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* الصندوق */
+.register-box {
+    background: #ffffff;
+    width: 100%;
+    max-width: 360px;
+    min-height: 640px;
+    padding: 46px 26px 40px;
+    border-radius: 22px;
+    box-shadow: 0 26px 60px rgba(0, 0, 0, 0.28);
+    direction: rtl;
+    position: relative;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+    /* النقاط العلوية */
+    .register-box::before {
+        content: "";
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        width: 46px;
+        height: 14px;
+        background: radial-gradient(circle 7px at 7px 7px, #ffe44b 99%, transparent 100%), radial-gradient(circle 5px at 23px 7px, #9df2d8 99%, transparent 100%), radial-gradient(circle 3px at 36px 7px, #171aec 99%, transparent 100%);
+        background-repeat: no-repeat;
+    }
+
+/* اللوقو */
+.logo-box {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 14px;
+}
+
+    /* ✅ ظهور تدريجي CSS فقط */
+    .logo-box img {
+        width: 88px;
+        aspect-ratio: 1 / 1;
+        display: block;
+        animation: logoFade 0.8s ease forwards;
+    }
+
+/* حركة الظهور */
+@keyframes logoFade {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* العنوان */
+.title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #0f3d4c;
+    margin-bottom: 28px;
+}
+
+/* الحقول */
+.field {
+    text-align: right;
+    margin-bottom: 18px;
+}
+
+    .field label {
+        display: block;
+        font-size: 13px;
+        font-weight: 600;
+        color: #6b7280;
+        margin-bottom: 6px;
+    }
+
+    .field input {
+        width: 100%;
+        padding: 13px 14px;
+        border-radius: 10px;
+        border: 1px solid #d1d5db;
+        font-size: 15px;
+        background: #ffffff;
+    }
+
+        .field input::placeholder {
+            color: #9ca3af;
+            font-weight: 500;
+        }
+
+        .field input:focus {
+            outline: none;
+            border-color: #1b6f82;
+        }
+
+/* الزر */
+.register-box button {
+    width: 100%;
+    padding: 14px;
+    border-radius: 14px;
+    background: #1b6f82;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+    .register-box button:hover {
+        background: #155d6d;
+    }
+
+/* رابط التسجيل */
+.login-hint {
+    margin-top: 22px;
+    font-size: 14px;
+    color: #6b7280;
+}
+
+    .login-hint a {
+        color: #1b6f82;
+        font-weight: 600;
+        text-decoration: none;
+        margin-right: 4px;
+    }
+
+        .login-hint a:hover {
+            text-decoration: underline;
+        }
+
+/* Dialog */
+.dialog-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.dialog-box {
+    background: #ffffff;
+    width: 280px;
+    padding: 22px;
+    border-radius: 14px;
+    text-align: center;
+}
+
+.dialog-icon {
+    font-size: 34px;
+    margin-bottom: 10px;
+}
+
+.dialog-box.success .dialog-icon {
+    color: #27ae60;
+}
+
+.dialog-box.error .dialog-icon {
+    color: #c0392b;
+}
+
+.dialog-box p {
+    font-size: 14px;
+    margin: 10px 0 16px;
+}
+
+.dialog-box button {
+    padding: 8px 26px;
+    border-radius: 10px;
+    background: #1b6f82;
+    color: #ffffff;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+}
+
+/* موبايل */
+@media (max-width: 480px) {
+    .register-box {
+        min-height: 560px;
+        padding: 40px 22px;
+    }
+
+    .title {
+        font-size: 22px;
+    }
+}

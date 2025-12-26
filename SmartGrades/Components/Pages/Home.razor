@@ -1,0 +1,20 @@
+﻿@page "/Home"
+@layout MainLayout
+
+@inject SmartGrades.Services.DataServices DataServices
+
+<div class="home-page">
+    <div class="home-hero">
+
+        
+
+        <h1 class="home-title">
+            مرحبا أستاد، @DataServices.CurrentTeacher?.FullName
+        </h1>
+
+        <h1 class="home-title">SmartGrades</h1>
+
+        <img class="home-logo" src="images/mainlogo.gif" />
+
+    </div>
+</div>

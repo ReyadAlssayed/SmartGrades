@@ -1,0 +1,22 @@
+﻿@inherits LayoutComponentBase
+
+@inject SmartGrades.Services.DataServices DataServices
+@inject NavigationManager Nav
+
+<div class="app-container">
+    <main class="page-content">
+        @Body
+    </main>
+
+    <BottomNav />
+</div>
+
+@code {
+    protected override void OnInitialized()
+    {
+        if (!DataServices.IsLoggedIn)
+        {
+            Nav.NavigateTo("/", true);
+        }
+    }
+}
