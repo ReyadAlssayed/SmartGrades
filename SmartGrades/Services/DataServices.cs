@@ -25,6 +25,11 @@ namespace SmartGrades.Services
             CurrentTeacher = null;
         }
 
+        public void Logout()
+        {
+            CurrentTeacher = null;
+        }
+
         // =========================
         // Init Supabase
         // =========================
@@ -97,7 +102,7 @@ namespace SmartGrades.Services
         }
 
         // =========================
-        // Login - Check name exists (optional)
+        // Login - Check name exists
         // =========================
         public async Task<bool> TeacherExistsAsync(string fullName)
         {
@@ -110,10 +115,38 @@ namespace SmartGrades.Services
 
             return result.Models.Any();
         }
-        public void Logout()
-        {
-            CurrentTeacher = null;
-        }
 
+        // =========================
+        // Change Password ✅
+        // =========================
+        public async Task<bool> ChangePasswordAsync(
+            string currentPassword,
+            string newPassword)
+        {
+            await EnsureClientAsync();
+
+            if (CurrentTeacher == null)
+                return false;
+
+            // تحقق من كلمة المرور الحالية
+            var check = await _client!
+                .From<Teacher>()
+                .Where(t =>
+                    t.Id == CurrentTeacher.Id &&
+                    t.Password == currentPassword)
+                .Get();
+
+            if (!check.Models.Any())
+                return false;
+
+            // تحديث كلمة المرور
+            CurrentTeacher.Password = newPassword;
+
+            await _client!
+                .From<Teacher>()
+                .Update(CurrentTeacher);
+
+            return true;
+        }
     }
 }

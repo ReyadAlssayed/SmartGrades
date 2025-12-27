@@ -6,11 +6,11 @@
 
 <div class="settings-page">
 
-    <!-- Header -->
+    <!-- ================= HEADER ================= -->
     <div class="settings-header">
         <div class="header-content">
 
-            <div class="avatar image-avatar">
+            <div class="image-avatar">
                 <img src="images/teacher.png" />
             </div>
 
@@ -23,7 +23,7 @@
         </div>
     </div>
 
-    <!-- Settings List -->
+    <!-- ================= SETTINGS LIST ================= -->
     <div class="settings-list">
 
         <div class="settings-item" @onclick="() => ShowProfileDialog = true">
@@ -41,19 +41,17 @@
             <span class="arrow">›</span>
         </div>
 
-        <!-- App Version (مثل باقي العناصر) -->
         <div class="settings-item version-item">
             <span>إصدار التطبيق</span>
-            <span class="version-text">SmartGrades · .NET 10 MAUI · السنة 1447 هـ</span>
-
+            <span class="version-text">
+                SmartGrades · .NET 10 MAUI · السنة 1447 هـ
+            </span>
         </div>
 
-        <!-- Logout Button -->
-       <button class="logout-btn" @onclick="Logout">
-    <img src="images/logout.png" class="logout-icon" />
-    تسجيل الخروج
-</button>
-
+        <button class="logout-btn" @onclick="Logout">
+            <img src="images/logout.png" class="logout-icon" />
+            تسجيل الخروج
+        </button>
 
     </div>
 </div>
@@ -77,7 +75,7 @@
     </div>
 }
 
-<!-- ================= PASSWORD DIALOG ================= -->
+<!-- ================= CHANGE PASSWORD DIALOG ================= -->
 @if (ShowPasswordDialog)
 {
     <div class="dialog-overlay">
@@ -85,15 +83,23 @@
 
             <h3>تغيير كلمة المرور</h3>
 
-            <input type="password" placeholder="كلمة المرور الحالية" />
-            <input type="password" placeholder="كلمة المرور الجديدة" />
-            <input type="password" placeholder="تأكيد كلمة المرور الجديدة" />
+            <input type="password"
+                   placeholder="كلمة المرور الحالية"
+                   @bind="CurrentPassword" />
 
-            <button class="dialog-action">
+            <input type="password"
+                   placeholder="كلمة المرور الجديدة"
+                   @bind="NewPassword" />
+
+            <input type="password"
+                   placeholder="تأكيد كلمة المرور الجديدة"
+                   @bind="ConfirmPassword" />
+
+            <button class="dialog-action" @onclick="ChangePassword">
                 حفظ التغيير
             </button>
 
-            <button class="dialog-close" @onclick="() => ShowPasswordDialog = false">
+            <button class="dialog-close" @onclick="ClosePasswordDialog">
                 إغلاق
             </button>
 
@@ -136,15 +142,45 @@
     </div>
 }
 
+<!-- ================= RESULT DIALOG (SUCCESS / ERROR) ================= -->
+@if (ShowResultDialog)
+{
+    <div class="dialog-overlay">
+        <div class="dialog-box @DialogType">
+
+            <div class="dialog-icon">
+                @(DialogType == "success" ? "✔" : "✖")
+            </div>
+
+            <p>@DialogMessage</p>
+
+            <button class="dialog-close" @onclick="CloseResultDialog">
+                حسناً
+            </button>
+
+        </div>
+    </div>
+}
+
 @code {
 
+    // ================= STATE =================
     bool ShowProfileDialog = false;
     bool ShowPasswordDialog = false;
     bool ShowAboutDialog = false;
     bool ShowAboutText = false;
 
+    bool ShowResultDialog = false;
+    string DialogMessage = "";
+    string DialogType = ""; // success | error
+
+    string CurrentPassword = "";
+    string NewPassword = "";
+    string ConfirmPassword = "";
+
     string TeacherName => DataServices.CurrentTeacher?.FullName ?? "—";
 
+    // ================= ABOUT =================
     void OpenAbout()
     {
         ShowAboutDialog = true;
@@ -162,6 +198,74 @@
         ShowAboutText = false;
     }
 
+    // ================= PASSWORD =================
+    async Task ChangePassword()
+    {
+        if (string.IsNullOrWhiteSpace(CurrentPassword))
+        {
+            ShowError("أدخل كلمة المرور الحالية");
+            return;
+        }
+
+        if (NewPassword.Length < 6 || NewPassword.Length > 30)
+        {
+            ShowError("كلمة المرور الجديدة يجب أن تكون بين 6 و 30 حرفًا");
+            return;
+        }
+
+        if (NewPassword != ConfirmPassword)
+        {
+            ShowError("كلمتا المرور غير متطابقتين");
+            return;
+        }
+
+        var success = await DataServices.ChangePasswordAsync(
+            CurrentPassword,
+            NewPassword
+        );
+
+        if (!success)
+        {
+            ShowError("كلمة المرور الحالية غير صحيحة");
+            return;
+        }
+
+        ShowSuccess("تم تغيير كلمة المرور بنجاح");
+
+        ClosePasswordDialog();
+    }
+
+    void ClosePasswordDialog()
+    {
+        ShowPasswordDialog = false;
+        CurrentPassword = "";
+        NewPassword = "";
+        ConfirmPassword = "";
+    }
+
+    // ================= RESULT =================
+    void ShowError(string text)
+    {
+        DialogMessage = text;
+        DialogType = "error";
+        ShowResultDialog = true;
+    }
+
+    void ShowSuccess(string text)
+    {
+        DialogMessage = text;
+        DialogType = "success";
+        ShowResultDialog = true;
+    }
+
+    void CloseResultDialog()
+    {
+        ShowResultDialog = false;
+        DialogMessage = "";
+        DialogType = "";
+    }
+
+    // ================= LOGOUT =================
     void Logout()
     {
         DataServices.Logout();
