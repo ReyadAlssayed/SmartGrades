@@ -148,5 +148,68 @@ namespace SmartGrades.Services
 
             return true;
         }
+
+
+        // =========================
+        // Semesters CRUD
+        // =========================
+
+        // 1️⃣ جلب كل السيمسترات
+        public async Task<List<Semesters>> GetSemestersAsync()
+        {
+            await EnsureClientAsync();
+
+            // حماية بسيطة: تأكد أن هناك مستخدم مسجل
+            if (CurrentTeacher == null)
+                return new List<Semesters>();
+
+            var result = await _client!
+                .From<Semesters>()
+                .Where(s => s.TeacherId == CurrentTeacher.Id)   // ⭐ الفلترة المهمة
+                .Order(s => s.StartDate, Supabase.Postgrest.Constants.Ordering.Ascending)
+                .Get();
+
+            return result.Models;
+        }
+
+
+        // 2️⃣ إضافة سمستر جديد
+        public async Task<bool> AddSemesterAsync(Semesters semester)
+    {
+        await EnsureClientAsync();
+
+        var response = await _client!
+            .From<Semesters>()
+            .Insert(semester);
+
+        return response.Models.Any();
+    }
+
+    // 3️⃣ تعديل سمستر
+    public async Task<bool> UpdateSemesterAsync(Semesters semester)
+    {
+        await EnsureClientAsync();
+
+        var response = await _client!
+            .From<Semesters>()
+            .Update(semester);
+
+        return response.Models.Any();
+    }
+
+        // 4️⃣ حذف سمستر
+        public async Task<bool> DeleteSemesterAsync(Guid semesterId)
+        {
+            await EnsureClientAsync();
+
+            await _client!
+                .From<Semesters>()
+                .Where(s => s.Id == semesterId)
+                .Delete();
+
+            return true;
+        }
+
+
     }
 }

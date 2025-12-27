@@ -21,5 +21,9 @@ namespace SmartGrades.Model
 
         [Column("isfinished")]
         public bool IsFinished { get; set; }
+
+        // ⭐ أضف هذا السطر
+        [Column("teacher_id")]
+        public Guid? TeacherId { get; set; }
     }
 }

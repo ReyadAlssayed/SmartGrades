@@ -1,0 +1,208 @@
+﻿/* ================= PAGE ================= */
+.semesters-page {
+    padding: 24px;
+    background: #f5f6f8;
+    min-height: 100vh;
+    direction: rtl;
+}
+
+/* ================= HEADER ================= */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+    .page-header h2 {
+        font-size: 22px;
+        font-weight: 900;
+        color: #0f172a;
+    }
+
+.add-btn {
+    background: linear-gradient(135deg, #14b8a6, #0d9488);
+    color: #fff;
+    border: none;
+    padding: 12px 22px;
+    border-radius: 16px;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 8px 18px rgba(20,184,166,0.35);
+}
+
+/* ================= GRID ================= */
+.cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 28px;
+}
+
+/* ================= FOLDER CARD ================= */
+.semester-card {
+    position: relative;
+    padding: 72px 24px 24px;
+    border-radius: 26px;
+    color: #fff;
+    background: linear-gradient(160deg, #0b1220, #020617);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 40px 60px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.08);
+    overflow: hidden;
+}
+
+    /* ================= REAL FOLDER TAB ================= */
+   
+
+    /* ================= INNER PAPERS ================= */
+    .semester-card::after {
+        content: "";
+        position: absolute;
+        top: 34px;
+        left: 36px;
+        width: 88%;
+        height: 68%;
+        background: linear-gradient( 180deg, rgba(255,255,255,0.14), rgba(255,255,255,0.03) );
+        border-radius: 22px;
+        z-index: 0;
+    }
+
+/* ================= CONTENT ================= */
+.card-header,
+.card-body,
+.card-actions {
+    position: relative;
+    z-index: 1;
+}
+
+/* ================= HEADER ================= */
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+}
+
+.semester-name {
+    font-size: 18px;
+    font-weight: 900;
+}
+
+/* ================= STATUS ================= */
+.status-badge {
+    padding: 8px 18px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 900;
+    color: #fff;
+}
+
+    .status-badge.active {
+        background: linear-gradient(135deg, #22c55e, #16a34a);
+    }
+
+    .status-badge.inactive {
+        background: linear-gradient(135deg, #fb923c, #ea580c);
+    }
+
+/* ================= BODY ================= */
+.card-body {
+    margin-top: 8px;
+}
+
+.date {
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+/* ================= ACTIONS ================= */
+.card-actions {
+    margin-top: 24px;
+    display: flex;
+    gap: 14px;
+}
+
+.edit-btn,
+.toggle-btn,
+.delete-btn {
+    flex: 1;
+    border: none;
+    padding: 12px;
+    border-radius: 16px;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+/* تعديل */
+.edit-btn {
+    background: linear-gradient(135deg, #2563eb, #1e40af);
+    color: #fff;
+    box-shadow: 0 8px 18px rgba(37,99,235,0.45);
+}
+
+/* تفعيل / إنهاء */
+.toggle-btn {
+    background: linear-gradient(135deg, #e5e7eb, #cbd5f5);
+    color: #020617;
+}
+
+/* حذف */
+.delete-btn {
+    background: linear-gradient(135deg, #ef4444, #b91c1c);
+    color: #fff;
+}
+
+/* ================= DIALOG ================= */
+.dialog-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.dialog-box {
+    background: #fff;
+    border-radius: 22px;
+    padding: 24px;
+    width: 92%;
+    max-width: 420px;
+}
+
+/* ================= RTL ================= */
+.rtl-input {
+    direction: rtl;
+    text-align: right;
+}
+
+    .rtl-input::placeholder {
+        direction: rtl;
+        text-align: right;
+    }
+
+.error-text {
+    color: #dc2626;
+    text-align: center;
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+
+/* ================= MOBILE ================= */
+@media (max-width: 768px) {
+
+    .cards-container {
+        grid-template-columns: 1fr;
+        gap: 22px;
+    }
+
+    .semester-card {
+        padding: 64px 18px 22px;
+    }
+
+      
+    .semester-name {
+        font-size: 16px;
+    }
+}

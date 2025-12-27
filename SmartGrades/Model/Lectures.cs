@@ -10,16 +10,14 @@ namespace SmartGrades.Model
         [PrimaryKey("id")]
         public Guid Id { get; set; }
 
-        [Column("subjectid")]
-        public Guid SubjectId { get; set; }
-
-        [Column("semesterid")]
-        public Guid SemesterId { get; set; }
-
         [Column("lecturedate")]
         public DateTime LectureDate { get; set; }
 
         [Column("lectureprice")]
         public decimal LecturePrice { get; set; }
+
+        [Column("semester_subject_id")]
+        public Guid SemesterSubjectId { get; set; }
+
     }
 }
