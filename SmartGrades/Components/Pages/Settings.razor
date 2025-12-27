@@ -41,9 +41,19 @@
             <span class="arrow">›</span>
         </div>
 
-        <button class="logout-btn" @onclick="Logout">
-            تسجيل الخروج
-        </button>
+        <!-- App Version (مثل باقي العناصر) -->
+        <div class="settings-item version-item">
+            <span>إصدار التطبيق</span>
+            <span class="version-text">SmartGrades · .NET 10 MAUI · السنة 1447 هـ</span>
+
+        </div>
+
+        <!-- Logout Button -->
+       <button class="logout-btn" @onclick="Logout">
+    <img src="images/logout.png" class="logout-icon" />
+    تسجيل الخروج
+</button>
+
 
     </div>
 </div>
@@ -95,20 +105,20 @@
 @if (ShowAboutDialog)
 {
     <div class="dialog-overlay">
-        <div class="dialog-box dialog-medium">
+        <div class="dialog-box dialog-large">
 
             <h3>حول SmartGrades</h3>
+
             <video class="about-video"
+                   preload="metadata"
                    autoplay
                    muted
                    playsinline
                    controls
                    @onended="OnVideoEnded">
-
                 <source src="images/video1.mp4" type="video/mp4" />
                 المتصفح لا يدعم تشغيل الفيديو
             </video>
-
 
             @if (ShowAboutText)
             {

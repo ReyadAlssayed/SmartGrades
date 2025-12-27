@@ -6,7 +6,7 @@
 /* الخلفية */
 .page-auth {
     min-height: 100vh;
-    background: #0f3d4c;
+    background: #1C8385;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -18,18 +18,17 @@
     background: #ffffff;
     width: 100%;
     max-width: 360px;
-    min-height: 640px; /* هذا يبقى */
+    min-height: 640px;
     padding: 46px 26px 40px;
     border-radius: 22px;
     box-shadow: 0 26px 60px rgba(0, 0, 0, 0.28);
     direction: rtl;
-    position: relative;
     text-align: center;
-    display: flex; /* ✅ أضف */
-    flex-direction: column; /* ✅ أضف */
-    justify-content: center; /* ✅ أضف */
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
-
 
     /* النقاط العلوية */
     .register-box::before {
@@ -50,15 +49,34 @@
     margin-bottom: 14px;
 }
 
+    .logo-box img {
+        width: 88px;
+        animation: logoFade 0.7s ease-out;
+    }
 
+@keyframes logoFade {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 
 /* العنوان */
 .title {
-    font-size: 25px; /* ⬅️ أكبر */
-    font-weight: 700; /* ⬅️ أغمق */
+    font-size: 25px;
+    font-weight: 700;
     color: #0f3d4c;
     margin-bottom: 28px;
-    letter-spacing: 0.2px;
+}
+
+/* منطقة الحقول */
+.fields-area {
+    min-height: 220px;
 }
 
 /* الحقول */
@@ -68,39 +86,33 @@
 }
 
     .field label {
-        display: block;
         font-size: 13px;
         font-weight: 600;
         color: #6b7280;
         margin-bottom: 6px;
+        display: block;
     }
 
     .field input {
         width: 100%;
         padding: 13px 14px;
         border-radius: 10px;
-        border: 1px solid #d1d5db; /* ⬅️ رمادي أدق */
+        border: 1px solid #d1d5db;
         font-size: 15px;
-        background: #ffffff;
     }
-
-        .field input::placeholder {
-            color: #9ca3af; /* ⬅️ أبهت */
-            font-weight: 500; /* ⬅️ أوضح قليلًا */
-        }
 
         .field input:focus {
             outline: none;
             border-color: #1b6f82;
         }
 
-/* زر التسجيل */
+/* الزر */
 .register-box button {
     width: 100%;
     padding: 14px;
     border-radius: 14px;
-    background: #1b6f82;
-    color: #ffffff;
+    background: #1C8385;
+    color: #fff;
     font-size: 16px;
     font-weight: 600;
     border: none;
@@ -112,7 +124,7 @@
         background: #155d6d;
     }
 
-/* تسجيل الدخول */
+/* الرابط */
 .login-hint {
     margin-top: 22px;
     font-size: 14px;
@@ -123,58 +135,23 @@
         color: #1b6f82;
         font-weight: 600;
         text-decoration: none;
-        margin-right: 4px;
     }
-
-        .login-hint a:hover {
-            text-decoration: underline;
-        }
 
 /* Dialog */
 .dialog-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.45);
+    background: rgba(0,0,0,0.45);
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
 }
 
 .dialog-box {
-    background: #ffffff;
-    width: 280px;
+    background: #fff;
     padding: 22px;
     border-radius: 14px;
     text-align: center;
-}
-
-.dialog-icon {
-    font-size: 34px;
-    margin-bottom: 10px;
-}
-
-.dialog-box.success .dialog-icon {
-    color: #27ae60;
-}
-
-.dialog-box.error .dialog-icon {
-    color: #c0392b;
-}
-
-.dialog-box p {
-    font-size: 14px;
-    margin: 10px 0 16px;
-}
-
-.dialog-box button {
-    padding: 8px 26px;
-    border-radius: 10px;
-    background: #1b6f82;
-    color: #ffffff;
-    font-size: 14px;
-    border: none;
-    cursor: pointer;
 }
 
 /* موبايل */
@@ -186,22 +163,5 @@
 
     .title {
         font-size: 22px;
-    }
-}
-.logo-box img {
-    width: 88px;
-    display: block;
-    animation: logoFade 0.7s ease-out;
-}
-
-@keyframes logoFade {
-    from {
-        opacity: 0;
-        transform: translateY(6px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
     }
 }

@@ -20,16 +20,13 @@
     box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
 }
 
-/* محتوى الهيدر */
 .header-content {
     display: flex;
     align-items: center;
     gap: 16px;
 }
 
-/* ===============================
-   الصورة (Avatar)
-================================ */
+/* Avatar */
 .image-avatar {
     width: 64px;
     height: 64px;
@@ -45,9 +42,7 @@
         object-fit: cover;
     }
 
-/* ===============================
-   معلومات المستخدم
-================================ */
+/* User info */
 .user-info {
     display: flex;
     align-items: center;
@@ -103,27 +98,47 @@
 }
 
 /* ===============================
-   زر تسجيل الخروج
+   إصدار التطبيق
+================================ */
+.version-item {
+    cursor: default;
+}
+
+.version-text {
+    font-size: 13px;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+/* ===============================
+   زر تسجيل الخروج (محسّن)
 ================================ */
 .logout-btn {
-    margin-top: 22px;
-    width: 100%;
-    border: none;
-    padding: 16px;
-    border-radius: 14px;
-    background-color: #e74c3c;
+    margin: 28px auto 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 22px;
+    border-radius: 12px;
+    background-color: #c0392b;
     color: #fff;
-    font-size: 15px;
-    font-weight: 700;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
     cursor: pointer;
-    box-shadow: 0 10px 22px rgba(231, 76, 60, 0.35);
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    box-shadow: 0 8px 18px rgba(192, 57, 43, 0.35);
+    transition: background 0.15s ease, transform 0.15s ease;
 }
 
     .logout-btn:hover {
+        background-color: #a93226;
         transform: translateY(-2px);
-        box-shadow: 0 14px 26px rgba(231, 76, 60, 0.45);
     }
+.logout-icon {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+}
 
 /* ===============================
    Dialog Overlay
@@ -139,9 +154,7 @@
     z-index: 2000;
 }
 
-/* ===============================
-   Dialog Box (عام)
-================================ */
+/* Dialog Box */
 .dialog-box {
     width: 92%;
     max-width: 440px;
@@ -152,14 +165,10 @@
     animation: dialogFade 0.25s ease;
 }
 
-/* ===============================
-   Dialog كبير (حول التطبيق)
-================================ */
 .dialog-large {
-    max-width: 600px; /* 🔥 كبرنا المربع */
+    max-width: 600px;
 }
 
-/* العنوان */
 .dialog-box h3 {
     margin-bottom: 16px;
     font-size: 19px;
@@ -168,20 +177,16 @@
     text-align: center;
 }
 
-/* ===============================
-   الفيديو
-================================ */
+/* Video */
 .about-video {
     width: 100%;
-    max-height: 240px; /* 🔥 حجم متوازن */
+    max-height: 240px;
     border-radius: 14px;
     background: #000;
     display: block;
 }
 
-/* ===============================
-   نص حول التطبيق
-================================ */
+/* About text */
 .about-text {
     margin-top: 16px;
     padding: 14px;
@@ -192,9 +197,7 @@
     line-height: 1.7;
 }
 
-/* ===============================
-   Inputs داخل Dialog
-================================ */
+/* Inputs */
 .dialog-box input {
     width: 100%;
     padding: 12px 14px;
@@ -202,12 +205,9 @@
     border-radius: 10px;
     border: 1px solid #ddd;
     font-size: 14px;
-    font-family: inherit;
 }
 
-/* ===============================
-   أزرار Dialog
-================================ */
+/* Dialog buttons */
 .dialog-action {
     width: 100%;
     padding: 12px;
@@ -231,9 +231,7 @@
     cursor: pointer;
 }
 
-/* ===============================
-   Animation
-================================ */
+/* Animation */
 @keyframes dialogFade {
     from {
         transform: translateY(14px);
@@ -246,9 +244,7 @@
     }
 }
 
-/* ===============================
-   موبايل
-================================ */
+/* Mobile */
 @media (max-width: 480px) {
     .settings-header {
         height: 150px;
@@ -266,4 +262,3 @@
         max-height: 210px;
     }
 }
-

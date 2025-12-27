@@ -16,30 +16,32 @@
     <!-- TITLE -->
     <h2 class="title">عمل حساب جديد</h2>
 
-    <!-- FULL NAME -->
-    <div class="field">
-        <label>اسم الأستاذ</label>
-        <input placeholder="اكتب اسمك الكامل"
-               maxlength="30"
-               @bind="fullName" />
-    </div>
+    <!-- FIELDS AREA -->
+    <div class="fields-area">
 
-    <!-- PASSWORD -->
-    <div class="field">
-        <label>كلمة المرور</label>
-        <input type="password"
-               placeholder="أدخل كلمة المرور"
-               maxlength="30"
-               @bind="password" />
-    </div>
+        <div class="field">
+            <label>اسم الأستاذ</label>
+            <input placeholder="اكتب اسمك الكامل"
+                   maxlength="30"
+                   @bind="fullName" />
+        </div>
 
-    <!-- CONFIRM PASSWORD -->
-    <div class="field">
-        <label>تأكيد كلمة المرور</label>
-        <input type="password"
-               placeholder="أعد إدخال كلمة المرور"
-               maxlength="30"
-               @bind="confirmPassword" />
+        <div class="field">
+            <label>كلمة المرور</label>
+            <input type="password"
+                   placeholder="أدخل كلمة المرور"
+                   maxlength="30"
+                   @bind="password" />
+        </div>
+
+        <div class="field">
+            <label>تأكيد كلمة المرور</label>
+            <input type="password"
+                   placeholder="أعد إدخال كلمة المرور"
+                   maxlength="30"
+                   @bind="confirmPassword" />
+        </div>
+
     </div>
 
     <!-- BUTTON -->
@@ -65,6 +67,7 @@
 }
 
 @code {
+
     string fullName = string.Empty;
     string password = string.Empty;
     string confirmPassword = string.Empty;
@@ -80,19 +83,13 @@
     {
         if (string.IsNullOrWhiteSpace(fullName))
         {
-            ShowError("انتبه، اسم الأستاذ مطلوب");
+            ShowError("اسم الأستاذ مطلوب");
             return;
         }
 
-        if (fullName.Length > 30)
+        if (password.Length < 6)
         {
-            ShowError("اسم الأستاذ يجب ألا يتجاوز 30 حرفًا");
-            return;
-        }
-
-        if (password.Length < 6 || password.Length > 30)
-        {
-            ShowError("كلمة المرور يجب أن تكون بين 6 و 30 حرفًا");
+            ShowError("كلمة المرور قصيرة");
             return;
         }
 
@@ -102,42 +99,21 @@
             return;
         }
 
-        try
+        var exists = await DataServices.TeacherNameExistsAsync(fullName);
+        if (exists)
         {
-            var exists = await DataServices.TeacherNameExistsAsync(fullName);
-            if (exists)
-            {
-                ShowError("عفواً، هذا الاسم مسجّل مسبقًا");
-                return;
-            }
-
-            var teacher = new SmartGrades.Model.Teacher
-            {
-                FullName = fullName,
-                Password = password
-            };
-
-            var success = await DataServices.CreateTeacherAsync(teacher);
-
-            if (success)
-            {
-                ShowSuccess("تم إنشاء الحساب بنجاح، اضغط حسناً للانتقال لتسجيل الدخول");
-
-                fullName = string.Empty;
-                password = string.Empty;
-                confirmPassword = string.Empty;
-
-                redirectAfterClose = true;
-            }
-            else
-            {
-                ShowError("حدث خطأ أثناء إنشاء الحساب");
-            }
+            ShowError("الاسم مسجّل مسبقًا");
+            return;
         }
-        catch
+
+        await DataServices.CreateTeacherAsync(new SmartGrades.Model.Teacher
         {
-            ShowError("تعذر الاتصال بالخادم، تحقق من الاتصال بالإنترنت");
-        }
+            FullName = fullName,
+            Password = password
+        });
+
+        ShowSuccess("تم إنشاء الحساب");
+        redirectAfterClose = true;
     }
 
     void ShowError(string text)
@@ -146,7 +122,6 @@
         dialogType = "error";
         dialogIcon = "✖";
         showDialog = true;
-        redirectAfterClose = false;
     }
 
     void ShowSuccess(string text)
@@ -160,11 +135,7 @@
     void CloseDialog()
     {
         showDialog = false;
-
         if (redirectAfterClose)
-        {
-            redirectAfterClose = false;
             Nav.NavigateTo("/", true);
-        }
     }
 }

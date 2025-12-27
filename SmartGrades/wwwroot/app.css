@@ -124,19 +124,44 @@ h1:focus {
     align-items: center;
 }
 
-/* «·œÊ¯«— */
-.loader {
-    width: 50px;
-    aspect-ratio: 1;
-    border-radius: 50%;
-    background: #514b82;
-    -webkit-mask: radial-gradient(circle closest-side at 50% 40%, #0000 94%, #000);
-    transform-origin: 50% 40%;
-    animation: l25 1s infinite linear;
+/* ===== Loader (Text Only) ===== */
+/* ===== Loader (White Art Style) ===== */
+
+.app-loading {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffffff; /* √»Ì÷ ’«›Ì */
 }
 
-@keyframes l25 {
+/* «·‰’ ﬂ·ÊÕ… ›‰Ì… */
+.loading-text {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    font-family: 'Segoe UI', 'Cairo', sans-serif;
+    text-align: center;
+    /*  œ—Ã ·Ê‰Ì ›‰Ì */
+    background: linear-gradient( 90deg, #2c3e50, #6a11cb, #2575fc, #2c3e50 );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    /* ≈Õ”«” —”„ */
+    text-shadow: 0 1px 0 rgba(0,0,0,0.05);
+    animation: paintFade 2.2s ease-in-out infinite;
+}
+
+/* Õ—ﬂ… Â«œ∆… Ãœ« */
+@keyframes paintFade {
+    0% {
+        opacity: 0.6;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
     100% {
-        transform: rotate(1turn);
+        opacity: 0.6;
     }
 }
