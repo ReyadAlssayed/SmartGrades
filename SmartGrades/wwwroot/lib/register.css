@@ -1,58 +1,69 @@
-﻿* {
+﻿/* ===============================
+   Reset + Font (خاص بهذه الصفحة فقط)
+================================ */
+.page-auth *,
+.page-auth *::before,
+.page-auth *::after {
     box-sizing: border-box;
     font-family: "Segoe UI", "Cairo", Tahoma, sans-serif;
 }
 
-/* الخلفية */
+/* ===============================
+   خلفية الصفحة (أزرق ثابت)
+================================ */
 .page-auth {
     min-height: 100vh;
-    background: #1C8385;
+    background-color: #1C8385;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 20px;
-}
-
-/* صندوق التسجيل */
-.register-box {
-    background: #ffffff;
-    width: 100%;
-    max-width: 360px;
-    min-height: 640px;
-    padding: 46px 26px 40px;
-    border-radius: 22px;
-    box-shadow: 0 26px 60px rgba(0, 0, 0, 0.28);
     direction: rtl;
-    text-align: center;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
 }
 
-    /* النقاط العلوية */
-    .register-box::before {
-        content: "";
-        position: absolute;
-        top: 20px;
-        left: 20px;
-        width: 46px;
-        height: 14px;
-        background: radial-gradient(circle 7px at 7px 7px, #ffe44b 99%, transparent 100%), radial-gradient(circle 5px at 23px 7px, #9df2d8 99%, transparent 100%), radial-gradient(circle 3px at 36px 7px, #171aec 99%, transparent 100%);
-        background-repeat: no-repeat;
+    /* ===============================
+   صندوق التسجيل / الدخول
+================================ */
+    .page-auth .register-box {
+        background-color: #ffffff;
+        width: 100%;
+        max-width: 360px;
+        min-height: 640px;
+        padding: 46px 26px 40px;
+        border-radius: 22px;
+        box-shadow: 0 26px 60px rgba(0, 0, 0, 0.28);
+        text-align: center;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
     }
 
-/* اللوقو */
-.logo-box {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 14px;
-}
+        /* النقاط العلوية */
+        .page-auth .register-box::before {
+            content: "";
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 46px;
+            height: 14px;
+            background: radial-gradient(circle 7px at 7px 7px, #ffe44b 99%, transparent 100%), radial-gradient(circle 5px at 23px 7px, #9df2d8 99%, transparent 100%), radial-gradient(circle 3px at 36px 7px, #171aec 99%, transparent 100%);
+            background-repeat: no-repeat;
+        }
 
-    .logo-box img {
-        width: 88px;
-        animation: logoFade 0.7s ease-out;
+    /* ===============================
+   اللوقو
+================================ */
+    .page-auth .logo-box {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 14px;
     }
+
+        .page-auth .logo-box img {
+            width: 88px;
+            animation: logoFade 0.7s ease-out;
+        }
 
 @keyframes logoFade {
     from {
@@ -66,26 +77,32 @@
     }
 }
 
-/* العنوان */
-.title {
+/* ===============================
+   العنوان
+================================ */
+.page-auth .title {
     font-size: 25px;
     font-weight: 700;
     color: #0f3d4c;
     margin-bottom: 28px;
 }
 
-/* منطقة الحقول */
-.fields-area {
+/* ===============================
+   منطقة الحقول
+================================ */
+.page-auth .fields-area {
     min-height: 220px;
 }
 
-/* الحقول */
-.field {
+/* ===============================
+   الحقول
+================================ */
+.page-auth .field {
     text-align: right;
     margin-bottom: 18px;
 }
 
-    .field label {
+    .page-auth .field label {
         font-size: 13px;
         font-weight: 600;
         color: #6b7280;
@@ -93,7 +110,7 @@
         display: block;
     }
 
-    .field input {
+    .page-auth .field input {
         width: 100%;
         padding: 13px 14px;
         border-radius: 10px;
@@ -101,67 +118,76 @@
         font-size: 15px;
     }
 
-        .field input:focus {
+        .page-auth .field input:focus {
             outline: none;
             border-color: #1b6f82;
         }
 
-/* الزر */
-.register-box button {
+/* ===============================
+   الزر
+================================ */
+.page-auth .register-box button {
     width: 100%;
     padding: 14px;
     border-radius: 14px;
-    background: #1C8385;
-    color: #fff;
+    background-color: #1C8385;
+    color: #ffffff;
     font-size: 16px;
     font-weight: 600;
     border: none;
     cursor: pointer;
     margin-top: 10px;
+    transition: background-color 0.2s ease;
 }
 
-    .register-box button:hover {
-        background: #155d6d;
+    .page-auth .register-box button:hover {
+        background-color: #155d6d;
     }
 
-/* الرابط */
-.login-hint {
+/* ===============================
+   الرابط السفلي
+================================ */
+.page-auth .login-hint {
     margin-top: 22px;
     font-size: 14px;
     color: #6b7280;
 }
 
-    .login-hint a {
+    .page-auth .login-hint a {
         color: #1b6f82;
         font-weight: 600;
         text-decoration: none;
     }
 
-/* Dialog */
-.dialog-overlay {
+/* ===============================
+   Dialog
+================================ */
+.page-auth .dialog-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.45);
+    background: rgba(0, 0, 0, 0.45);
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.dialog-box {
-    background: #fff;
+.page-auth .dialog-box {
+    background: #ffffff;
     padding: 22px;
     border-radius: 14px;
     text-align: center;
 }
 
-/* موبايل */
+/* ===============================
+   موبايل
+================================ */
 @media (max-width: 480px) {
-    .register-box {
+    .page-auth .register-box {
         min-height: 620px;
         padding: 40px 22px;
     }
 
-    .title {
+    .page-auth .title {
         font-size: 22px;
     }
 }

@@ -23,30 +23,49 @@
         </div>
     </div>
 
+    <div class="settings-section-title">
+        الحساب والإعدادات
+    </div>
+
+
     <!-- ================= SETTINGS LIST ================= -->
     <div class="settings-list">
 
+
         <div class="settings-item" @onclick="() => ShowProfileDialog = true">
-            <span>الملف الشخصي</span>
+            <div class="item-left">
+                <img src="images/profile.png" class="item-icon" />
+                <span>الملف الشخصي</span>
+            </div>
             <span class="arrow">›</span>
         </div>
 
         <div class="settings-item" @onclick="() => ShowPasswordDialog = true">
-            <span>تغيير كلمة المرور</span>
+            <div class="item-left">
+                <img src="images/password.png" class="item-icon" />
+                <span>تغيير كلمة المرور</span>
+            </div>
             <span class="arrow">›</span>
         </div>
 
         <div class="settings-item" @onclick="OpenAbout">
-            <span>حول التطبيق</span>
+            <div class="item-left">
+                <img src="images/information.png" class="item-icon" />
+                <span>حول التطبيق</span>
+            </div>
             <span class="arrow">›</span>
         </div>
 
         <div class="settings-item version-item">
-            <span>إصدار التطبيق</span>
+            <div class="item-left">
+                <img src="images/tracking.png" class="item-icon" />
+                <span>إصدار التطبيق</span>
+            </div>
             <span class="version-text">
-                SmartGrades · .NET 10 MAUI · السنة 1447 هـ
+                SmartGrades · .NET 10 MAUI · 1447 هـ
             </span>
         </div>
+
 
         <button class="logout-btn" @onclick="Logout">
             <img src="images/logout.png" class="logout-icon" />
