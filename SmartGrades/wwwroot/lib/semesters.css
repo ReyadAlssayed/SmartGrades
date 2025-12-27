@@ -1,6 +1,7 @@
 ﻿/* ================= PAGE ================= */
 .semesters-page {
     padding: 24px;
+    padding-top: calc(32px + var(--safe-top));
     background: #f5f6f8;
     min-height: 100vh;
     direction: rtl;

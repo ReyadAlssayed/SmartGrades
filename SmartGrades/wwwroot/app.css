@@ -1,6 +1,20 @@
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
+:root {
+    --safe-top: env(safe-area-inset-top);
+    --safe-bottom: env(safe-area-inset-bottom);
+}
+
+.page,
+.semesters-page,
+.settings-page,
+.home-page {
+    padding-top: var(--safe-top);
+    padding-bottom: calc(80px + var(--safe-bottom));
+}
+
+
 
 /* —Ê«»ÿ Ê√“—«— */
 a, .btn-link {
@@ -115,25 +129,6 @@ h1:focus {
 
 /* ===== Loader ===== */
 
-/* Õ«ÊÌ… «· Õ„Ì· (ﬁ»·  ‘€Ì· Blazor ›ﬁÿ) */
-.app-loading {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-/* ===== Loader (Text Only) ===== */
-/* ===== Loader (White Art Style) ===== */
-
-.app-loading {
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #ffffff; /* √»Ì÷ ’«›Ì */
-}
 
 /* «·‰’ ﬂ·ÊÕ… ›‰Ì… */
 .loading-text {
@@ -144,7 +139,6 @@ h1:focus {
     text-align: center;
     /*  œ—Ã ·Ê‰Ì ›‰Ì */
     background: linear-gradient( 90deg, #2c3e50, #6a11cb, #2575fc, #2c3e50 );
-    -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     /* ≈Õ”«” —”„ */
     text-shadow: 0 1px 0 rgba(0,0,0,0.05);
