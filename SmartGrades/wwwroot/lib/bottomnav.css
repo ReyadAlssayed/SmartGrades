@@ -49,15 +49,16 @@
         width: 42px;
         height: 42px;
         border-radius: 50%;
-        background: rgba(37, 99, 235, 0.45);
+        background: rgba(51, 152, 255, 0.45); /* #3398FF */
         opacity: 0;
         transform: scale(0.6);
         transition: opacity 0.2s ease, transform 0.2s ease;
     }
 
+
     /* الحالة النشطة */
     .nav-item.active {
-        color: #2563eb;
+        color: #3398FF;
     }
 
         .nav-item.active::before {

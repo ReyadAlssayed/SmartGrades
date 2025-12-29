@@ -3,7 +3,7 @@
     min-height: 100vh;
     padding: 32px 16px calc(100px + env(safe-area-inset-bottom));
     direction: rtl;
-    background-color: #090D11;
+    background-color: black;
     display: flex;
     justify-content: center;
     align-items: center;

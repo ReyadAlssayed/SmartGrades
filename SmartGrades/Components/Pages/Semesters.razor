@@ -2,13 +2,16 @@
 @layout MainLayout
 
 @inject SmartGrades.Services.DataServices DataServices
+@inject NavigationManager Nav
 
 <div class="semesters-page">
 
     <!-- Header -->
     <div class="page-header">
         <h2>السيمسترات</h2>
-        <button class="add-btn" @onclick="OpenAddDialog">إضافة سمستر جديد</button>
+        <button class="add-btn" @onclick="OpenAddDialog">
+            إضافة سمستر جديد
+        </button>
     </div>
     <hr />
 
@@ -26,6 +29,7 @@
             {
                 <div class="semester-card">
 
+                    <!-- Header -->
                     <div class="card-header">
                         <span class="semester-name">@s.SemesterName</span>
 
@@ -34,29 +38,40 @@
                         </span>
                     </div>
 
+                    <!-- Body -->
                     <div class="card-body">
                         <div class="date">
                             📅 @s.StartDate.ToString("yyyy/MM/dd")
                             →
                             @(s.EndDate.HasValue
-                                                ? s.EndDate.Value.ToString("yyyy/MM/dd")
-                                                : "—")
+                                ? s.EndDate.Value.ToString("yyyy/MM/dd")
+                                : "—")
                         </div>
                     </div>
 
+                    <!-- Actions -->
                     <div class="card-actions">
-                        <button class="edit-btn" @onclick="() => OpenEditDialog(s)">تعديل</button>
+                        <button class="delete-btn"
+                                @onclick="() => OpenDeleteDialog(s)">
+                            حذف
+                        </button>
 
                         <button class="toggle-btn"
                                 @onclick="() => ToggleStatus(s)">
                             @(s.IsFinished ? "تفعيل" : "إنهاء")
                         </button>
 
-                        <button class="delete-btn"
-                                @onclick="() => OpenDeleteDialog(s)">
-                            حذف
+                        <button class="edit-btn"
+                                @onclick="() => OpenEditDialog(s)">
+                            تعديل
                         </button>
                     </div>
+
+                    <!-- ⭐ DETAILS (رسمي – أسفل الكرت) -->
+                    <button class="details-link"
+                            @onclick="() => GoToDetails(s.Id)">
+                        عرض تفاصيل السمستر والمواد
+                    </button>
 
                 </div>
             }
@@ -129,15 +144,11 @@
 
 @code {
 
-    // =====================
-    // Data
-    // =====================
+    // ===================== DATA =====================
     List<SmartGrades.Model.Semesters> SemesterList = new();
     SmartGrades.Model.Semesters? SelectedSemester;
 
-    // =====================
-    // Dialog State
-    // =====================
+    // ===================== DIALOG STATE =====================
     bool ShowFormDialog = false;
     bool ShowDeleteDialog = false;
 
@@ -147,17 +158,19 @@
     DateTime FormEnd = DateTime.Today.AddMonths(3);
     string FormError = "";
 
-    // =====================
-    // Load Data
-    // =====================
+    // ===================== LOAD =====================
     protected override async Task OnInitializedAsync()
     {
         SemesterList = await DataServices.GetSemestersAsync();
     }
 
-    // =====================
-    // Dialog Logic
-    // =====================
+    // ===================== NAVIGATION =====================
+    void GoToDetails(Guid semesterId)
+    {
+        Nav.NavigateTo($"/SemesterSubjects/{semesterId}");
+    }
+
+    // ===================== ADD / EDIT =====================
     void OpenAddDialog()
     {
         DialogTitle = "إضافة سمستر";
@@ -203,18 +216,14 @@
 
         if (SelectedSemester == null)
         {
-            var newSemester = new SmartGrades.Model.Semesters
+            await DataServices.AddSemesterAsync(new SmartGrades.Model.Semesters
             {
                 SemesterName = FormName,
                 StartDate = FormStart,
                 EndDate = FormEnd,
                 IsFinished = false,
-
-                // ⭐ الربط بالمستخدم الحالي
                 TeacherId = DataServices.CurrentTeacher!.Id
-            };
-
-            await DataServices.AddSemesterAsync(newSemester);
+            });
         }
         else
         {
@@ -229,9 +238,7 @@
         ShowFormDialog = false;
     }
 
-    // =====================
-    // Status Toggle
-    // =====================
+    // ===================== STATUS =====================
     async Task ToggleStatus(SmartGrades.Model.Semesters s)
     {
         s.IsFinished = !s.IsFinished;
@@ -239,9 +246,7 @@
         SemesterList = await DataServices.GetSemestersAsync();
     }
 
-    // =====================
-    // Delete
-    // =====================
+    // ===================== DELETE =====================
     void OpenDeleteDialog(SmartGrades.Model.Semesters s)
     {
         SelectedSemester = s;

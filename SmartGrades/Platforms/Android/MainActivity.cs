@@ -21,10 +21,10 @@ namespace SmartGrades
         {
             base.OnCreate(savedInstanceState);
 
-            // جعل شريط الحالة أبيض
+            // شريط الحالة أبيض
             Window.SetStatusBarColor(Android.Graphics.Color.White);
 
-            // جعل الأيقونات سوداء
+            // الأيقونات سوداء
             if (Build.VERSION.SdkInt >= BuildVersionCodes.M)
             {
                 Window.DecorView.SystemUiVisibility =

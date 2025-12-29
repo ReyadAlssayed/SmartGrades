@@ -201,7 +201,7 @@
 /* Video */
 .about-video {
     width: 100%;
-    max-height: 240px;
+    max-height: 340px;
     border-radius: 14px;
     background: #000;
     display: block;
@@ -280,7 +280,7 @@
     }
 
     .about-video {
-        max-height: 210px;
+        max-height: 300px;
     }
 }
 
