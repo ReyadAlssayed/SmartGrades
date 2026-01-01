@@ -5,11 +5,10 @@
 
 <div class="register-box">
 
+    <!-- IMAGE -->
     <div class="media-box">
-    <img src="images/loginpic.gif"
-         alt="Login Image" />
-</div>
-
+        <img src="images/loginpic.gif" alt="Login Image" />
+    </div>
 
     <!-- TITLE -->
     <h2 class="title">تسجيل الدخول</h2>
@@ -19,7 +18,8 @@
         <label>اسم الأستاذ</label>
         <input placeholder="اكتب اسمك الكامل"
                maxlength="30"
-               @bind="fullName" />
+               @bind="fullName"
+               disabled="@isLoading" />
     </div>
 
     <!-- PASSWORD -->
@@ -28,11 +28,14 @@
         <input type="password"
                placeholder="أدخل كلمة المرور"
                maxlength="30"
-               @bind="password" />
+               @bind="password"
+               disabled="@isLoading" />
     </div>
 
     <!-- BUTTON -->
-    <button @onclick="DoLogin">تسجيل الدخول</button>
+    <button @onclick="DoLogin" disabled="@isLoading">
+        تسجيل الدخول
+    </button>
 
     <!-- REGISTER LINK -->
     <div class="login-hint">
@@ -42,6 +45,18 @@
 
 </div>
 
+<!-- ================= LOADING OVERLAY ================= -->
+@if (isLoading)
+{
+    <div class="loading-overlay">
+        <div class="loading-box">
+            <img src="images/wait.gif" alt="loading" />
+            <p>جاري التحقق...</p>
+        </div>
+    </div>
+}
+
+<!-- ================= DIALOG ================= -->
 @if (showDialog)
 {
     <div class="dialog-overlay">
@@ -54,8 +69,13 @@
 }
 
 @code {
+
     string fullName = string.Empty;
     string password = string.Empty;
+    const int LoginTimeoutSeconds = 20;
+
+
+    bool isLoading = false;
 
     bool showDialog = false;
     string dialogMessage = string.Empty;
@@ -64,41 +84,60 @@
 
     async Task DoLogin()
     {
+        if (isLoading) return;
+        isLoading = true;
+
         if (string.IsNullOrWhiteSpace(fullName))
         {
             ShowError("اسم الأستاذ مطلوب");
+            isLoading = false;
             return;
         }
 
         if (string.IsNullOrWhiteSpace(password))
         {
             ShowError("كلمة المرور مطلوبة");
+            isLoading = false;
             return;
         }
 
         try
         {
-            var teacher = await DataServices.LoginAsync(fullName, password);
+            var loginTask = DataServices.LoginAsync(fullName, password);
+            var timeoutTask = Task.Delay(TimeSpan.FromSeconds(LoginTimeoutSeconds));
+
+            var completedTask = await Task.WhenAny(loginTask, timeoutTask);
+
+            // ⛔ انتهى الوقت
+            if (completedTask == timeoutTask)
+            {
+                ShowError("الاتصال بالإنترنت ضعيف أو غير متوفر");
+                isLoading = false;
+                return;
+            }
+
+            // ✅ نأخذ نتيجة تسجيل الدخول
+            var teacher = await loginTask;
 
             if (teacher == null)
             {
                 ShowError("اسم المستخدم أو كلمة المرور غير صحيحة");
+                isLoading = false;
                 return;
             }
 
             ShowSuccess("تم تسجيل الدخول بنجاح");
 
-            // ⏳ انتظار بسيط لعرض الرسالة
             await Task.Delay(500);
-
-            // ✅ الانتقال إلى الصفحة الرئيسية
             Nav.NavigateTo("/Home", true);
         }
         catch
         {
-            ShowError("تعذر الاتصال بالخادم، تحقق من الاتصال بالإنترنت");
+            ShowError("تعذر الاتصال بالخادم، تحقق من الإنترنت");
+            isLoading = false;
         }
     }
+
 
     void ShowError(string text)
     {
@@ -119,5 +158,6 @@
     void CloseDialog()
     {
         showDialog = false;
+        isLoading = false;
     }
 }

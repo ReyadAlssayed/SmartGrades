@@ -210,6 +210,126 @@ namespace SmartGrades.Services
             return true;
         }
 
+        public async Task<List<Subjects>> GetAllSubjectsAsync()
+        {
+            await EnsureClientAsync();
+
+            var result = await _client!
+                .From<Subjects>()
+                .Order(s => s.SubjectName, Supabase.Postgrest.Constants.Ordering.Ascending)
+                .Get();
+
+            return result.Models;
+        }
+
+        public async Task<List<Subjects>> GetSubjectsBySemesterAsync(Guid semesterId)
+        {
+            await EnsureClientAsync();
+
+            var links = await _client!
+                .From<SemesterSubjects>()
+                .Where(ss => ss.SemesterId == semesterId)
+                .Get();
+
+            if (!links.Models.Any())
+                return new List<Subjects>();
+
+            var subjectIds = links.Models
+                .Select(ss => ss.SubjectId)
+                .ToList();
+
+            var subjects = await _client!
+                .From<Subjects>()
+                .Filter("id", Supabase.Postgrest.Constants.Operator.In, subjectIds)
+                .Get();
+
+            return subjects.Models;
+        }
+
+        public async Task<bool> AddSubjectToSemesterAsync(Guid semesterId, Guid subjectId)
+        {
+            await EnsureClientAsync();
+
+            var exists = await _client!
+                .From<SemesterSubjects>()
+                .Where(ss =>
+                    ss.SemesterId == semesterId &&
+                    ss.SubjectId == subjectId)
+                .Get();
+
+            if (exists.Models.Any())
+                return false;
+
+            var response = await _client!
+                .From<SemesterSubjects>()
+                .Insert(new SemesterSubjects
+                {
+                    SemesterId = semesterId,
+                    SubjectId = subjectId
+                });
+
+            return response.Models.Any();
+        }
+
+        public async Task<bool> RemoveSubjectFromSemesterAsync(Guid semesterId, Guid subjectId)
+        {
+            await EnsureClientAsync();
+
+            await _client!
+                .From<SemesterSubjects>()
+                .Where(ss =>
+                    ss.SemesterId == semesterId &&
+                    ss.SubjectId == subjectId)
+                .Delete();
+
+            return true;
+        }
+
+        public async Task<Subjects?> CreateSubjectAsync(string subjectName)
+        {
+            try
+            {
+                await EnsureClientAsync();
+
+                var normalizedName = subjectName.Trim();
+
+                var existing = await _client!
+                    .From<Subjects>()
+                    .Where(s => s.SubjectName == normalizedName)
+                    .Get();
+
+                if (existing.Models.Any())
+                    return existing.Models.First();
+
+                var subject = new Subjects
+                {
+                    SubjectName = normalizedName
+                };
+
+                var response = await _client!
+                    .From<Subjects>()
+                    .Insert(subject);
+
+                return response.Models.FirstOrDefault();
+            }
+            catch
+            {
+                // لا نرمي Exception
+                return null;
+            }
+        }
+        public async Task<bool> UpdateSubjectAsync(Subjects subject)
+        {
+            await EnsureClientAsync();
+
+            var response = await _client!
+                .From<Subjects>()
+                .Update(subject);
+
+            return response.Models.Any();
+        }
+
+
 
     }
 }
