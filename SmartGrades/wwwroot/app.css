@@ -4,17 +4,23 @@ html, body {
 
 /* Safe Area */
 :root {
+    --bottom-nav-height: 72px;
     --safe-top: env(safe-area-inset-top);
     --safe-bottom: env(safe-area-inset-bottom);
 }
+.page-content {
+    padding-bottom: calc(var(--bottom-nav-height) + var(--safe-bottom));
+}
+
 
 .page,
 .semesters-page,
 .settings-page,
 .home-page {
     padding-top: var(--safe-top);
-    padding-bottom: calc(80px + var(--safe-bottom));
+    
 }
+
 
 /* —Ê«»ÿ Ê√“—«— */
 a, .btn-link {
@@ -73,6 +79,7 @@ a, .btn-link {
     justify-content: center;
     z-index: 9999;
 }
+
 .loading-text {
     font-size: 20px;
     font-weight: 700;

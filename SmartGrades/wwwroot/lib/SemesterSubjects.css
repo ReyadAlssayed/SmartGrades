@@ -16,7 +16,7 @@ body {
 ================================ */
 h3 {
     text-align: center;
-    margin: 34px 0 20px; /* نزلناه قليل جدًا */
+    margin: 34px 0 20px;
     font-size: 22px;
     font-weight: 900;
     color: #0f172a;
@@ -27,7 +27,7 @@ h3 {
 ================================ */
 .top-action {
     display: flex;
-    justify-content: flex-start; /* أقصى اليسار */
+    justify-content: flex-start;
     padding: 0 24px;
     margin-bottom: 22px;
 }
@@ -42,114 +42,85 @@ h3 {
     color: #ffffff;
     background: linear-gradient(135deg, #2563eb, #60a5fa);
     box-shadow: 0 10px 26px rgba(37, 99, 235, 0.35);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-    .add-main-btn:hover:not(:disabled) {
-        transform: translateY(-2px);
-        box-shadow: 0 14px 34px rgba(37, 99, 235, 0.45);
-    }
-
-    .add-main-btn:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-    }
-
 /* ===============================
-   TABLE WRAPPER
+   TABLE
 ================================ */
 .table-wrapper {
     width: 100%;
     padding: 0 20px;
 }
 
-/* ===============================
-   TABLE
-================================ */
 table {
     width: 100%;
     border-collapse: collapse;
+    table-layout: fixed; /* يبقي الجدول ثابت */
     background: #ffffff;
     border-radius: 20px;
     overflow: hidden;
     box-shadow: 0 18px 36px rgba(0, 0, 0, 0.08);
-    direction: rtl;
 }
 
+/* توزيع الأعمدة (مهم جدًا) */
+thead th:nth-child(1),
+tbody td:nth-child(1) {
+    width: 45%;
+}
+/* المادة */
+
+thead th:nth-child(2),
+tbody td:nth-child(2) {
+    width: 20%;
+}
+/* السعر */
+
+thead th:nth-child(3),
+tbody td:nth-child(3) {
+    width: 35%;
+}
+/* الإجراء */
+
 /* ===============================
-   TABLE HEADER
+   HEADER
 ================================ */
 thead {
-    background: linear-gradient( 135deg, #3b82f6, #60a5fa );
+    background: linear-gradient(135deg, #3b82f6, #60a5fa);
 }
 
     thead th {
-        color: #ffffff;
+        color: #fff;
         padding: 16px;
         font-size: 14px;
         font-weight: 900;
         text-align: center;
-        border-left: 1px solid rgba(255, 255, 255, 0.35);
     }
 
-        thead th:first-child {
-            border-left: none;
-        }
-
 /* ===============================
-   TABLE BODY
+   BODY
 ================================ */
 tbody td {
     padding: 16px;
     font-size: 14px;
     color: #374151;
     text-align: center;
-    border-bottom: 1px solid #e5e7eb; /* خطوط رصاصية */
-    border-left: 1px solid #e5e7eb;
-}
-
-    tbody td:first-child {
-        border-left: none;
-    }
-
-tbody tr:hover {
-    background: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
 }
 
 /* ===============================
-   SUBJECT CELL (DOT FIXED)
+   SUBJECT NAME (الحل النهائي)
 ================================ */
-/* خلية المادة */
-.subject-cell {
-    display: grid;
-    grid-template-columns: 24px auto; /* عمود ثابت للنقطة + النص */
-    align-items: center;
-    justify-content: center; /* ⭐ توسيط أفقي كامل */
-    gap: 8px;
-}
-
-
-
-
 .subject-name {
-    max-width: 260px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    text-align: center; /* ⭐ النص نفسه في الوسط */
-}
-
-/* خط فاصل فقط بين المادة والسعر */
-tbody td:nth-child(2),
-thead th:nth-child(2) {
-    border-right: 1px solid #e5e7eb;
-}
-tbody td:last-child {
+    display: block;
+    width: 100%;
+    white-space: nowrap; /* سطر واحد فقط */
+    overflow: visible; /* لا قص */
+    text-overflow: unset; /* لا ... */
     text-align: center;
 }
 
 /* ===============================
-   ACTION BUTTONS
+   BUTTONS
 ================================ */
 .edit-btn,
 .delete-btn {
@@ -160,38 +131,31 @@ tbody td:last-child {
     border: none;
     cursor: pointer;
     margin: 0 4px;
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-/* EDIT */
 .edit-btn {
     background: linear-gradient(135deg, #2563eb, #60a5fa);
-    color: #ffffff;
-    box-shadow: 0 6px 14px rgba(37, 99, 235, 0.35);
+    color: #fff;
 }
 
-    .edit-btn:hover:not(:disabled) {
-        transform: translateY(-1px);
-        box-shadow: 0 10px 22px rgba(37, 99, 235, 0.45);
-    }
-
-/* DELETE */
 .delete-btn {
     background: linear-gradient(135deg, #ef4444, #f87171);
-    color: #ffffff;
-    box-shadow: 0 6px 14px rgba(239, 68, 68, 0.35);
+    color: #fff;
 }
 
-    .delete-btn:hover:not(:disabled) {
-        transform: translateY(-1px);
-        box-shadow: 0 10px 22px rgba(239, 68, 68, 0.45);
-    }
+/* ===============================
+   ROW ADDED
+================================ */
+.row-added {
+    background: #dcfce7;
+    animation: fadeOut 3s forwards;
+}
 
-    .edit-btn:disabled,
-    .delete-btn:disabled {
-        opacity: 0.55;
-        cursor: not-allowed;
+@keyframes fadeOut {
+    to {
+        background: transparent;
     }
+}
 
 /* ===============================
    MOBILE
@@ -199,19 +163,5 @@ tbody td:last-child {
 @media (max-width: 480px) {
     h3 {
         font-size: 20px;
-    }
-
-    .subject-name {
-        max-width: 180px;
-    }
-
-    thead th,
-    tbody td {
-        font-size: 13px;
-        padding: 14px 10px;
-    }
-
-    .top-action {
-        padding: 0 16px;
     }
 }

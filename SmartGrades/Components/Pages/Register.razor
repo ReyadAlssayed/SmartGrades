@@ -7,9 +7,8 @@
 
     <!-- LOGO -->
     <div class="media-box">
-    <img src="images/logo.gif" alt="SmartGrades Logo" />
-</div>
-
+        <img src="images/logo.gif" alt="SmartGrades Logo" />
+    </div>
 
     <!-- TITLE -->
     <h2 class="title">عمل حساب جديد</h2>
@@ -21,7 +20,8 @@
             <label>اسم الأستاذ</label>
             <input placeholder="اكتب اسمك الكامل"
                    maxlength="30"
-                   @bind="fullName" />
+                   @bind="fullName"
+                   disabled="@isLoading" />
         </div>
 
         <div class="field">
@@ -29,7 +29,8 @@
             <input type="password"
                    placeholder="أدخل كلمة المرور"
                    maxlength="30"
-                   @bind="password" />
+                   @bind="password"
+                   disabled="@isLoading" />
         </div>
 
         <div class="field">
@@ -37,13 +38,16 @@
             <input type="password"
                    placeholder="أعد إدخال كلمة المرور"
                    maxlength="30"
-                   @bind="confirmPassword" />
+                   @bind="confirmPassword"
+                   disabled="@isLoading" />
         </div>
 
     </div>
 
     <!-- BUTTON -->
-    <button @onclick="CreateAccount">عمل حساب</button>
+    <button @onclick="CreateAccount" disabled="@isLoading">
+        عمل حساب
+    </button>
 
     <!-- LOGIN LINK -->
     <div class="login-hint">
@@ -53,6 +57,18 @@
 
 </div>
 
+<!-- ================= LOADING OVERLAY ================= -->
+@if (isLoading)
+{
+    <div class="loading-overlay">
+        <div class="loading-box">
+            <img src="images/wait.gif" alt="loading" />
+            <p>جاري إنشاء الحساب...</p>
+        </div>
+    </div>
+}
+
+<!-- ================= DIALOG ================= -->
 @if (showDialog)
 {
     <div class="dialog-overlay">
@@ -70,6 +86,9 @@
     string password = string.Empty;
     string confirmPassword = string.Empty;
 
+    const int RegisterTimeoutSeconds = 20;
+    bool isLoading = false;
+
     bool showDialog = false;
     bool redirectAfterClose = false;
 
@@ -79,39 +98,68 @@
 
     async Task CreateAccount()
     {
+        if (isLoading) return;
+        isLoading = true;
+
         if (string.IsNullOrWhiteSpace(fullName))
         {
             ShowError("اسم الأستاذ مطلوب");
+            isLoading = false;
             return;
         }
 
         if (password.Length < 6)
         {
             ShowError("كلمة المرور قصيرة");
+            isLoading = false;
             return;
         }
 
         if (password != confirmPassword)
         {
             ShowError("كلمتا المرور غير متطابقتين");
+            isLoading = false;
             return;
         }
 
-        var exists = await DataServices.TeacherNameExistsAsync(fullName);
-        if (exists)
+        try
         {
-            ShowError("الاسم مسجّل مسبقًا");
-            return;
+            var checkTask = DataServices.TeacherNameExistsAsync(fullName);
+            var timeoutTask = Task.Delay(TimeSpan.FromSeconds(RegisterTimeoutSeconds));
+
+            var completed = await Task.WhenAny(checkTask, timeoutTask);
+
+            if (completed == timeoutTask)
+            {
+                ShowError("الاتصال بالإنترنت ضعيف أو غير متوفر");
+                isLoading = false;
+                return;
+            }
+
+            if (await checkTask)
+            {
+                ShowError("الاسم مسجّل مسبقًا");
+                isLoading = false;
+                return;
+            }
+
+            await DataServices.CreateTeacherAsync(new SmartGrades.Model.Teacher
+            {
+                FullName = fullName,
+                Password = password
+            });
+
+            ShowSuccess("تم إنشاء الحساب بنجاح");
+            redirectAfterClose = true;
         }
-
-        await DataServices.CreateTeacherAsync(new SmartGrades.Model.Teacher
+        catch
         {
-            FullName = fullName,
-            Password = password
-        });
-
-        ShowSuccess("تم إنشاء الحساب");
-        redirectAfterClose = true;
+            ShowError("تعذر الاتصال بالخادم، تحقق من الإنترنت");
+        }
+        finally
+        {
+            isLoading = false;
+        }
     }
 
     void ShowError(string text)

@@ -11,7 +11,6 @@
     </p>
 }
 
-<!-- ADD BUTTON -->
 <div class="top-action">
     <button class="add-main-btn"
             disabled="@(!IsSemesterActive)"
@@ -20,10 +19,9 @@
     </button>
 </div>
 
-<!-- TABLE -->
 @if (SubjectsInSemester.Count == 0)
 {
-    <p>لا توجد مواد مضافة لهذا السمستر</p>
+    <p style="text-align:center">لا توجد مواد مضافة لهذا السمستر</p>
 }
 else
 {
@@ -39,23 +37,19 @@ else
             <tbody>
                 @foreach (var subject in SubjectsInSemester)
                 {
-                    <tr>
-                        <td>
-                            <div class="subject-cell">
-                                <span class="subject-dot"></span>
-                                <span class="subject-name" title="@subject.SubjectName">
-                                    @subject.SubjectName
-                                </span>
-                            </div>
+                    <tr class="@(RecentlyAddedSubjectId == subject.Id ? "row-added" : "")">
+                        <td class="subject-cell">
+                            <span class="subject-name" title="@subject.SubjectName">
+                                @subject.SubjectName
+                            </span>
                         </td>
-                        <td>@subject.LecturePrice</td>
-                        <td>
+                        <td>@subject.LecturePrice.ToString("0.00")</td>
+                        <td class="action-cell">
                             <button class="edit-btn"
                                     disabled="@(!IsSemesterActive)"
                                     @onclick="() => OpenEditDialog(subject)">
                                 تعديل
                             </button>
-
                             <button class="delete-btn"
                                     disabled="@(!IsSemesterActive)"
                                     @onclick="() => OpenDeleteDialog(subject)">
@@ -69,7 +63,6 @@ else
     </div>
 }
 
-<!-- ================= ADD / EDIT DIALOG ================= -->
 @if (ShowAddEditDialog)
 {
     <div class="dialog-overlay">
@@ -77,73 +70,52 @@ else
             <h3>@(EditingSubject == null ? "إضافة مادة جديدة" : "تعديل المادة")</h3>
 
             <label>اسم المادة</label>
-            <input type="text"
-                   @bind="DialogName"
-                   maxlength="30"
-                   placeholder="أدخل اسم المادة" />
+            <input type="text" maxlength="30" @bind="DialogName" />
 
-            <label>السعر (للمحاضرة)</label>
+            <label>السعر</label>
             <input type="number" @bind="DialogPrice" />
 
-            <button class="dialog-primary" @onclick="ConfirmAddOrEdit">
-                حفظ
-            </button>
-
-            <button class="dialog-secondary" @onclick="CloseDialog">
-                إلغاء
-            </button>
+            <button class="dialog-primary" @onclick="ConfirmAddOrEdit">حفظ</button>
+            <button class="dialog-secondary" @onclick="CloseDialog">إلغاء</button>
         </div>
     </div>
 }
 
-<!-- ================= DELETE CONFIRM ================= -->
 @if (ShowDeleteDialog && SubjectToDelete != null)
 {
     <div class="dialog-overlay">
         <div class="dialog-box dialog-danger">
             <h3>تأكيد الحذف</h3>
-            <p>
-                هل أنت متأكد من حذف المادة
-                <strong>@SubjectToDelete.SubjectName</strong>؟
-            </p>
+            <p>هل أنت متأكد من حذف <b>@SubjectToDelete.SubjectName</b>؟</p>
 
-            <button class="delete-btn" @onclick="ConfirmDelete">
-                نعم، حذف
-            </button>
-            <button class="dialog-secondary" @onclick="CloseDeleteDialog">
-                إلغاء
-            </button>
+            <button class="delete-btn" @onclick="ConfirmDelete">نعم، حذف</button>
+            <button class="dialog-secondary" @onclick="CloseDeleteDialog">إلغاء</button>
         </div>
     </div>
 }
 
-<!-- ================= ERROR DIALOG ================= -->
 @if (ShowErrorDialog)
 {
     <div class="dialog-overlay">
         <div class="dialog-box dialog-danger">
             <h3>تنبيه</h3>
             <p>@ErrorMessage</p>
-            <button class="dialog-primary" @onclick="CloseErrorDialog">
-                موافق
-            </button>
+            <button class="dialog-primary" @onclick="CloseErrorDialog">موافق</button>
         </div>
     </div>
 }
 
 @code {
-
     [Parameter] public Guid SemesterId { get; set; }
 
-    bool IsSemesterActive = true;
     string SemesterName = "";
+    bool IsSemesterActive = true;
 
     List<Subjects> SubjectsInSemester = new();
 
-    // Dialog states
-    bool ShowAddEditDialog = false;
-    bool ShowDeleteDialog = false;
-    bool ShowErrorDialog = false;
+    bool ShowAddEditDialog;
+    bool ShowDeleteDialog;
+    bool ShowErrorDialog;
 
     Subjects? EditingSubject;
     Subjects? SubjectToDelete;
@@ -152,14 +124,13 @@ else
     decimal DialogPrice = 30;
 
     string ErrorMessage = "";
+    Guid? RecentlyAddedSubjectId;
 
     protected override async Task OnInitializedAsync()
     {
         var semesters = await DataServices.GetSemestersAsync();
         var semester = semesters.FirstOrDefault(s => s.Id == SemesterId);
-
-        if (semester == null)
-            return;
+        if (semester == null) return;
 
         SemesterName = semester.SemesterName;
         IsSemesterActive = !semester.IsFinished;
@@ -168,7 +139,6 @@ else
             await DataServices.GetSubjectsBySemesterAsync(SemesterId);
     }
 
-    // ================= ADD / EDIT =================
     void OpenAddDialog()
     {
         EditingSubject = null;
@@ -187,15 +157,24 @@ else
 
     async Task ConfirmAddOrEdit()
     {
-        if (string.IsNullOrWhiteSpace(DialogName) || DialogName.Length > 30)
+        var name = DialogName.Trim();
+
+        if (string.IsNullOrWhiteSpace(name))
         {
-            ShowError("اسم المادة مطلوب ولا يجب أن يتجاوز 30 حرفًا");
+            ShowError("اسم المادة مطلوب");
             return;
         }
 
         if (DialogPrice <= 0)
         {
-            ShowError("سعر المادة غير صالح");
+            ShowError("السعر غير صالح");
+            return;
+        }
+
+        if (EditingSubject == null &&
+            SubjectsInSemester.Any(s => s.SubjectName == name))
+        {
+            ShowError("المادة مضافة مسبقًا لهذا السمستر");
             return;
         }
 
@@ -203,21 +182,23 @@ else
 
         if (EditingSubject == null)
         {
-            subject = await DataServices.CreateSubjectAsync(DialogName);
-            if (subject == null)
-            {
-                ShowError("فشل في إنشاء المادة");
-                return;
-            }
-
+            subject = await DataServices.CreateSubjectAsync(name);
             await DataServices.AddSubjectToSemesterAsync(SemesterId, subject.Id);
+            RecentlyAddedSubjectId = subject.Id;
+
+            _ = Task.Run(async () =>
+            {
+                await Task.Delay(3000);
+                RecentlyAddedSubjectId = null;
+                await InvokeAsync(StateHasChanged);
+            });
         }
         else
         {
             subject = EditingSubject;
         }
 
-        subject.SubjectName = DialogName.Trim();
+        subject.SubjectName = name;
         subject.LecturePrice = DialogPrice;
 
         await DataServices.UpdateSubjectAsync(subject);
@@ -234,7 +215,6 @@ else
         EditingSubject = null;
     }
 
-    // ================= DELETE =================
     void OpenDeleteDialog(Subjects subject)
     {
         SubjectToDelete = subject;
@@ -243,10 +223,8 @@ else
 
     async Task ConfirmDelete()
     {
-        if (SubjectToDelete == null) return;
-
         await DataServices.RemoveSubjectFromSemesterAsync(
-            SemesterId, SubjectToDelete.Id);
+            SemesterId, SubjectToDelete!.Id);
 
         SubjectsInSemester =
             await DataServices.GetSubjectsBySemesterAsync(SemesterId);
@@ -260,10 +238,9 @@ else
         SubjectToDelete = null;
     }
 
-    // ================= ERROR =================
-    void ShowError(string message)
+    void ShowError(string msg)
     {
-        ErrorMessage = message;
+        ErrorMessage = msg;
         ShowErrorDialog = true;
     }
 

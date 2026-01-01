@@ -1,32 +1,60 @@
-﻿* {
+﻿/* ===============================
+   Reset + Font
+================================ */
+.page-auth,
+.page-auth * {
     box-sizing: border-box;
-    font-family: system-ui, -apple-system, "Segoe UI", Tahoma, Arial, sans-serif;
+    font-family: "Segoe UI", "Cairo", Tahoma, sans-serif;
 }
 
-/* الخلفية */
+/* ===============================
+   Page Background
+================================ */
 .page-auth {
     min-height: 100vh;
-    background: #2f80ed;
+    background: linear-gradient(135deg, #1e3a8a, #2563eb, #60a5fa);
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 20px;
+    direction: rtl;
 }
 
-/* الصندوق */
+/* ===============================
+   Auth Box
+================================ */
 .register-box {
-    background: #ffffff;
+    background-color: #ffffff;
     width: 100%;
     max-width: 360px;
+    min-height: 640px;
     padding: 46px 26px 40px;
     border-radius: 22px;
     box-shadow: 0 26px 60px rgba(0, 0, 0, 0.28);
-    direction: rtl;
     text-align: center;
     position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
-/* الصورة */
+    /* ===============================
+   Top Dots Decoration
+================================ */
+    .register-box::before {
+        content: "";
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        width: 46px;
+        height: 14px;
+        background: radial-gradient(circle 7px at 7px 7px, #60a5fa 99%, transparent 100%), radial-gradient(circle 5px at 23px 7px, #38bdf8 99%, transparent 100%), radial-gradient(circle 3px at 36px 7px, #22d3ee 99%, transparent 100%);
+        background-repeat: no-repeat;
+    }
+
+/* ===============================
+   Media (Image / Logo)
+================================ */
 .media-box {
     width: 105%;
     height: 190px;
@@ -38,26 +66,37 @@
         width: 100%;
     }
 
-/* العنوان */
+/* ===============================
+   Title
+================================ */
 .title {
-    font-size: 24px;
+    font-size: 25px;
     font-weight: 700;
     color: #0f3d4c;
     margin-bottom: 28px;
 }
 
-/* الحقول */
+/* ===============================
+   Fields Area
+================================ */
+.fields-area {
+    min-height: 220px;
+}
+
+/* ===============================
+   Input Field
+================================ */
 .field {
     text-align: right;
     margin-bottom: 18px;
 }
 
     .field label {
-        display: block;
         font-size: 13px;
         font-weight: 600;
         color: #6b7280;
         margin-bottom: 6px;
+        display: block;
     }
 
     .field input {
@@ -70,37 +109,53 @@
 
         .field input:focus {
             outline: none;
-            border-color: #2563eb;
+            border-color: #1b6f82;
         }
 
-/* الزر */
+/* ===============================
+   Main Button
+================================ */
 .register-box button {
     width: 100%;
     padding: 14px;
     border-radius: 14px;
-    background: linear-gradient(135deg, #1e3a8a, #2563eb, #60a5fa);
+    background-color: #1C8385;
     color: #ffffff;
     font-size: 16px;
     font-weight: 600;
     border: none;
     cursor: pointer;
     margin-top: 10px;
-    box-shadow: 0 8px 22px rgba(37, 99, 235, 0.45);
+    transition: background-color 0.2s ease;
 }
+
+    .register-box button:hover:not(:disabled) {
+        background-color: #155d6d;
+    }
 
     .register-box button:disabled {
         opacity: 0.6;
         cursor: not-allowed;
     }
 
-/* رابط التسجيل */
+/* ===============================
+   Bottom Hint Link
+================================ */
 .login-hint {
     margin-top: 22px;
     font-size: 14px;
     color: #6b7280;
 }
 
-/* ================= LOADING OVERLAY ================= */
+    .login-hint a {
+        color: #1b6f82;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+/* ===============================
+   Loading Overlay
+================================ */
 .loading-overlay {
     position: fixed;
     inset: 0;
@@ -131,7 +186,9 @@
         color: #374151;
     }
 
-/* ================= DIALOG ================= */
+/* ===============================
+   Dialog
+================================ */
 .dialog-overlay {
     position: fixed;
     inset: 0;
@@ -171,16 +228,27 @@
 .dialog-box button {
     padding: 8px 26px;
     border-radius: 10px;
-    background: #2563eb;
+    background: #1C8385;
     color: #ffffff;
     font-size: 14px;
     border: none;
     cursor: pointer;
 }
 
-/* موبايل */
+/* ===============================
+   Mobile
+================================ */
 @media (max-width: 480px) {
+    .register-box {
+        min-height: 620px;
+        padding: 40px 22px;
+    }
+
     .title {
         font-size: 22px;
+    }
+
+    .media-box {
+        font-size: 0; /* يخفي نص alt على الهاتف */
     }
 }
