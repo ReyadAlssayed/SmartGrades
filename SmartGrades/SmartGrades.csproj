@@ -20,7 +20,7 @@
         <Nullable>enable</Nullable>
 
         <!-- Display name -->
-        <ApplicationTitle>SmartGrades</ApplicationTitle>
+        <ApplicationTitle>الجبل العالي</ApplicationTitle>
 
         <!-- App Identifier -->
         <ApplicationId>com.companyname.smartgrades</ApplicationId>
