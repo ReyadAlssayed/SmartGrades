@@ -1,5 +1,6 @@
-﻿using Supabase;
-using SmartGrades.Model;
+﻿using SmartGrades.Model;
+using Supabase;
+using System.Net.Http;
 using System.Text.Json;
 
 namespace SmartGrades.Services
@@ -7,36 +8,6 @@ namespace SmartGrades.Services
     public class DataServices
     {
         private Client? _client;
-        // =========================
-        // Admin (Temporary)
-        // =========================
-        private const string AdminName = "رياض السيد";
-        private const string AdminTelegramChatId = "6321706551";
-        private const string TelegramToken =
-            "8292571055:AAHnhwIYwEuA7_TgFgRKl7m6Q64khsc2UMY";
-
-
-        // =========================
-        // Session (Current Teacher)
-        // =========================
-        public Teacher? CurrentTeacher { get; private set; }
-
-        public bool IsLoggedIn => CurrentTeacher != null;
-
-        public void OpenSession(Teacher teacher)
-        {
-            CurrentTeacher = teacher;
-        }
-
-        public void CloseSession()
-        {
-            CurrentTeacher = null;
-        }
-
-        public void Logout()
-        {
-            CurrentTeacher = null;
-        }
 
         // =========================
         // Init Supabase
@@ -61,277 +32,113 @@ namespace SmartGrades.Services
         }
 
         // =========================
-        // Register - Check duplicate name
-        // =========================
-        public async Task<bool> TeacherNameExistsAsync(string fullName)
-        {
-            await EnsureClientAsync();
-
-            var result = await _client!
-                .From<Teacher>()
-                .Where(t => t.FullName == fullName)
-                .Get();
-
-            return result.Models.Any();
-        }
-
-        // =========================
-        // Register - Create new teacher
-        // =========================
-        public async Task<bool> CreateTeacherAsync(Teacher teacher)
-        {
-            await EnsureClientAsync();
-
-            var response = await _client!
-                .From<Teacher>()
-                .Insert(teacher);
-
-            return response.Models.Any();
-        }
-
-        // =========================
-        // Login - Authenticate teacher
-        // =========================
-        public async Task<Teacher?> LoginAsync(string fullName, string password)
-        {
-            await EnsureClientAsync();
-
-            var result = await _client!
-                .From<Teacher>()
-                .Where(t => t.FullName == fullName && t.Password == password)
-                .Get();
-
-            var teacher = result.Models.FirstOrDefault();
-
-            if (teacher != null)
-                OpenSession(teacher);
-
-            return teacher;
-        }
-
-        // =========================
-        // Login - Check name exists
-        // =========================
-        public async Task<bool> TeacherExistsAsync(string fullName)
-        {
-            await EnsureClientAsync();
-
-            var result = await _client!
-                .From<Teacher>()
-                .Where(t => t.FullName == fullName)
-                .Get();
-
-            return result.Models.Any();
-        }
-
-        // =========================
-        // Change Password ✅
-        // =========================
-        public async Task<bool> ChangePasswordAsync(
-            string currentPassword,
-            string newPassword)
-        {
-            await EnsureClientAsync();
-
-            if (CurrentTeacher == null)
-                return false;
-
-            // تحقق من كلمة المرور الحالية
-            var check = await _client!
-                .From<Teacher>()
-                .Where(t =>
-                    t.Id == CurrentTeacher.Id &&
-                    t.Password == currentPassword)
-                .Get();
-
-            if (!check.Models.Any())
-                return false;
-
-            // تحديث كلمة المرور
-            CurrentTeacher.Password = newPassword;
-
-            await _client!
-                .From<Teacher>()
-                .Update(CurrentTeacher);
-
-            return true;
-        }
-
-
-        // =========================
         // Semesters CRUD
         // =========================
-
-        // 1️⃣ جلب كل السيمسترات
-        public async Task<List<Semesters>> GetSemestersAsync()
+        public async Task<List<Semester>> GetSemestersAsync()
         {
             await EnsureClientAsync();
 
-            // حماية بسيطة: تأكد أن هناك مستخدم مسجل
-            if (CurrentTeacher == null)
-                return new List<Semesters>();
-
             var result = await _client!
-                .From<Semesters>()
-                .Where(s => s.TeacherId == CurrentTeacher.Id)   // ⭐ الفلترة المهمة
-                .Order(s => s.StartDate, Supabase.Postgrest.Constants.Ordering.Ascending)
+                .From<Semester>()
+                .Order("start_date", Supabase.Postgrest.Constants.Ordering.Ascending)
                 .Get();
 
             return result.Models;
         }
 
+        public async Task<bool> AddSemesterAsync(Semester semester)
+        {
+            await EnsureClientAsync();
 
-        // 2️⃣ إضافة سمستر جديد
-        public async Task<bool> AddSemesterAsync(Semesters semester)
-    {
-        await EnsureClientAsync();
+            var response = await _client!
+                .From<Semester>()
+                .Insert(semester);
 
-        var response = await _client!
-            .From<Semesters>()
-            .Insert(semester);
+            return response.Models.Any();
+        }
 
-        return response.Models.Any();
-    }
+        public async Task<bool> UpdateSemesterAsync(Semester semester)
+        {
+            await EnsureClientAsync();
 
-    // 3️⃣ تعديل سمستر
-    public async Task<bool> UpdateSemesterAsync(Semesters semester)
-    {
-        await EnsureClientAsync();
+            var response = await _client!
+                .From<Semester>()
+                .Update(semester);
 
-        var response = await _client!
-            .From<Semesters>()
-            .Update(semester);
+            return response.Models.Any();
+        }
 
-        return response.Models.Any();
-    }
-
-        // 4️⃣ حذف سمستر
         public async Task<bool> DeleteSemesterAsync(Guid semesterId)
         {
             await EnsureClientAsync();
 
             await _client!
-                .From<Semesters>()
+                .From<Semester>()
                 .Where(s => s.Id == semesterId)
                 .Delete();
 
             return true;
         }
 
-        public async Task<List<Subjects>> GetAllSubjectsAsync()
+        // =========================
+        // Admin
+        // =========================
+      
+
+        public async Task<bool> ChangeAdminPasswordAsync(
+            Guid adminId,
+            string currentPassword,
+            string newPassword)
         {
             await EnsureClientAsync();
 
-            var result = await _client!
-                .From<Subjects>()
-                .Order(s => s.SubjectName, Supabase.Postgrest.Constants.Ordering.Ascending)
+            var check = await _client!
+                .From<Admin>()
+                .Where(a =>
+                    a.Id == adminId &&
+                    a.PasswordHash == currentPassword)
                 .Get();
 
-            return result.Models;
-        }
-
-        public async Task<List<Subjects>> GetSubjectsBySemesterAsync(Guid semesterId)
-        {
-            await EnsureClientAsync();
-
-            var links = await _client!
-                .From<SemesterSubjects>()
-                .Where(ss => ss.SemesterId == semesterId)
-                .Get();
-
-            if (!links.Models.Any())
-                return new List<Subjects>();
-
-            var subjectIds = links.Models
-                .Select(ss => ss.SubjectId)
-                .ToList();
-
-            var subjects = await _client!
-                .From<Subjects>()
-                .Filter("id", Supabase.Postgrest.Constants.Operator.In, subjectIds)
-                .Get();
-
-            return subjects.Models;
-        }
-
-        public async Task<bool> AddSubjectToSemesterAsync(Guid semesterId, Guid subjectId)
-        {
-            await EnsureClientAsync();
-
-            var exists = await _client!
-                .From<SemesterSubjects>()
-                .Where(ss =>
-                    ss.SemesterId == semesterId &&
-                    ss.SubjectId == subjectId)
-                .Get();
-
-            if (exists.Models.Any())
+            if (!check.Models.Any())
                 return false;
 
-            var response = await _client!
-                .From<SemesterSubjects>()
-                .Insert(new SemesterSubjects
-                {
-                    SemesterId = semesterId,
-                    SubjectId = subjectId
-                });
-
-            return response.Models.Any();
-        }
-
-        public async Task<bool> RemoveSubjectFromSemesterAsync(Guid semesterId, Guid subjectId)
-        {
-            await EnsureClientAsync();
+            var admin = check.Models.First();
+            admin.PasswordHash = newPassword;
 
             await _client!
-                .From<SemesterSubjects>()
-                .Where(ss =>
-                    ss.SemesterId == semesterId &&
-                    ss.SubjectId == subjectId)
-                .Delete();
+                .From<Admin>()
+                .Update(admin);
 
             return true;
         }
 
-        public async Task<Subjects?> CreateSubjectAsync(string subjectName)
+        // =========================
+        // System Settings
+        // =========================
+        public async Task<SystemSettings?> GetSystemSettingsAsync()
         {
-            try
-            {
-                await EnsureClientAsync();
+            await EnsureClientAsync();
 
-                var normalizedName = subjectName.Trim();
+            var result = await _client!
+                .From<SystemSettings>()
+                .Where(s => s.Id == 1)
+                .Get();
 
-                var existing = await _client!
-                    .From<Subjects>()
-                    .Where(s => s.SubjectName == normalizedName)
-                    .Get();
-
-                if (existing.Models.Any())
-                    return existing.Models.First();
-
-                var subject = new Subjects
-                {
-                    SubjectName = normalizedName
-                };
-
-                var response = await _client!
-                    .From<Subjects>()
-                    .Insert(subject);
-
-                return response.Models.FirstOrDefault();
-            }
-            catch
-            {
-                // لا نرمي Exception
-                return null;
-            }
+            return result.Models.FirstOrDefault();
         }
+
+        public async Task<string?> GetSupportPhoneAsync()
+        {
+            var settings = await GetSystemSettingsAsync();
+            return settings?.SupportPhone;
+        }
+
+        // =========================
+        // Telegram
+        // =========================
         public async Task SendReportToAdminAsync(string message)
         {
-            // Chat ID الخاص بك (تجربة)
             string adminChatId = "6321706551";
-
-            // Token البوت
             string token = "8292571055:AAHnhwIYwEuA7_TgFgRKl7m6Q64khsc2UMY";
 
             using var http = new HttpClient();
@@ -343,6 +150,85 @@ namespace SmartGrades.Services
 
             await http.GetAsync(url);
         }
+
+        // =========================
+        // Admins List
+        // =========================
+        public async Task<List<Admin>> GetAdminsAsync()
+        {
+            await EnsureClientAsync();
+
+            var result = await _client!
+                .From<Admin>()
+                .Order("created_at", Supabase.Postgrest.Constants.Ordering.Descending)
+                .Get();
+
+            return result.Models;
+        }
+
+        public async Task<bool> AddAdminAsync(Admin admin)
+        {
+            await EnsureClientAsync();
+
+            admin.Id = Guid.NewGuid();
+            admin.CreatedAt = DateTime.UtcNow;
+            admin.IsActive = false; // افتراضيًا غير نشط
+
+            var result = await _client!
+                .From<Admin>()
+                .Insert(admin);
+
+            return result.Models.Any();
+        }
+        public async Task<bool> UpdateAdminAsync(Admin admin)
+        {
+            await EnsureClientAsync();
+
+            var result = await _client!
+                .From<Admin>()
+                .Update(admin);
+
+            return result.Models.Any();
+        }
+
+        public async Task<bool> DeleteAdminAsync(Guid adminId)
+        {
+            await EnsureClientAsync();
+
+            await _client!
+                .From<Admin>()
+                .Where(a => a.Id == adminId)
+                .Delete();
+
+            return true;
+        }
+
+        public async Task<Admin?> LoginAsync(string username, string password)
+        {
+            await EnsureClientAsync();
+
+            var result = await _client!
+                .From<Admin>()
+                .Where(a =>
+                    a.Username == username &&
+                    a.PasswordHash == password &&
+                    a.IsActive == true)
+                .Get();
+
+            var admin = result.Models.FirstOrDefault();
+            if (admin == null)
+                return null;
+
+            // تحديث آخر تسجيل دخول
+            admin.LastLoginAt = DateTime.UtcNow;
+
+            await _client!
+                .From<Admin>()
+                .Update(admin);
+
+            return admin;
+        }
+
 
 
 

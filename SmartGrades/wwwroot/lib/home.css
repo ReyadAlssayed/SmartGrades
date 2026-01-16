@@ -1,102 +1,94 @@
-﻿/* =========================
-   Base
-========================= */
-* {
-    -webkit-tap-highlight-color: transparent;
-}
-
-:focus {
-    outline: none;
-}
-
-/* =========================
-   الصفحة + الخلفية GIF
-========================= */
-.home-page {
+﻿.home-simple {
     min-height: 100vh;
-    padding: 32px 16px calc(100px + env(safe-area-inset-bottom));
     direction: rtl;
-    background-image: url('/images/mainlogo.gif');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    background-color: #ffffff;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    position: relative;
-    box-shadow: inset 0 0 120px rgba(0, 0, 0, 0.55);
-}
-
-    /* تعتيم */
-    .home-page::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.45);
-    }
-
-/* =========================
-   المحتوى
-========================= */
-.home-hero {
-    width: 100%;
-    max-width: 520px;
+    padding: 24px;
     text-align: center;
-    margin-top: 10vh;
     position: relative;
-    z-index: 1;
 }
 
-/* العناوين */
-.home-title {
-    font-family: 'Lucida Sans', 'Segoe UI', 'Cairo', sans-serif;
-    letter-spacing: 0.5px;
-    font-size: 30px;
+/* أيقونة */
+.home-icon {
+    width: 80px;
+    height: 80px;
+    background: #eaf1ff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+}
+
+    .home-icon i {
+        font-size: 34px;
+        color: #2563eb;
+    }
+
+/* العنوان */
+.home-title-main {
+    font-size: 44px;
     font-weight: 800;
-    color: #ffffff;
-    line-height: 1.4;
-    margin-bottom: 12px;
+    color: #2563eb;
+    margin-bottom: 6px;
+    font-family: 'Cairo', 'Segoe UI', sans-serif;
 }
 
-    /* خط فاصل */
-    .home-title:first-of-type::after {
-        content: "";
-        display: block;
-        width: 120px;
-        height: 2px;
-        margin: 14px auto 0;
-        background: linear-gradient( to right, transparent, rgba(255, 255, 255, 0.6), transparent );
-        border-radius: 2px;
-    }
-
-/* =========================
-   Animation (اللمسة)
-========================= */
-@keyframes heroFadeUp {
-    from {
-        opacity: 0;
-        transform: translateY(22px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+/* خط تحت العنوان */
+.home-line {
+    width: 90px;
+    height: 3px;
+    background: #93c5fd;
+    border-radius: 4px;
+    margin: 10px 0 18px;
 }
 
-.animate-hero {
-    animation: heroFadeUp 0.8s ease-out forwards;
+/* الترحيب */
+.home-welcome {
+    font-size: 22px;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 6px;
 }
 
-/* =========================
-   موبايل
-========================= */
+
+
+.home-divider {
+    width: 260px;
+    border: none;
+    border-top: 1px solid #e5e7eb;
+    margin: 20px 0;
+}
+
+
+*:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+*:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* الحقوق – رمادي وأعلى من الشريط */
+.home-footer {
+    font-size: 13px;
+    color: #9ca3af;
+    position: absolute;
+    bottom: 90px; /* ⬅️ أعلى من BottomNav */
+}
+
+/* موبايل */
 @media (max-width: 480px) {
-    .home-title {
-        font-size: 26px;
+    .home-title-main {
+        font-size: 36px;
     }
 
-    .home-hero {
-        margin-top: 6vh;
+    .home-welcome {
+        font-size: 20px;
     }
 }

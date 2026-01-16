@@ -1,14 +1,20 @@
 ﻿using System;
-using Supabase.Postgrest.Attributes;
-using Supabase.Postgrest.Models;
+using System.Collections.Generic;
+using System.Text;
 
 namespace SmartGrades.Model
 {
-    [Table("teachers")]
-    public class Teacher : BaseModel
+    using Supabase.Postgrest.Models;
+    using Supabase.Postgrest.Attributes;
+
+    [Table("students")]
+    public class Student : BaseModel
     {
         [PrimaryKey("id", false)]
         public Guid Id { get; set; }
+
+        [Column("student_code")]
+        public string StudentCode { get; set; } = "";
 
         [Column("full_name")]
         public string FullName { get; set; } = "";

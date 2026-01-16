@@ -1,6 +1,6 @@
 ﻿@page "/Settings"
 @layout MainLayout
-
+@using SmartGrades.Model
 @inject SmartGrades.Services.DataServices DataServices
 @inject NavigationManager Nav
 
@@ -11,12 +11,12 @@
         <div class="header-content">
 
             <div class="image-avatar">
-                <img src="images/teacher.png" />
+                <img src="images/admin.png" />
             </div>
 
             <div class="user-info">
                 <div class="user-name">
-                    @TeacherName <span class="user-role"> — أستاذ</span>
+                    @Admin?.FullName
                 </div>
             </div>
 
@@ -24,10 +24,9 @@
     </div>
 
     <div class="settings-section-title">
-        الحساب والإعدادات
+        الإعدادات
     </div>
 
-    <!-- ================= SETTINGS LIST ================= -->
     <div class="settings-list">
 
         <div class="settings-item" @onclick="() => ShowProfileDialog = true">
@@ -46,19 +45,27 @@
             <span class="arrow">›</span>
         </div>
 
-        <!-- 🔹 إرسال إعلان -->
-        <div class="settings-item" @onclick="OpenAnnouncement">
+        <div class="settings-item" @onclick="GoToAdmins">
             <div class="item-left">
-                <img src="images/announcement.png" class="item-icon" />
-                <span>إرسال إعلان (تجربة)</span>
+                <img src="images/Admins.png" class="item-icon" />
+                <span>عرض قائمة المسؤولين في النظام</span>
             </div>
             <span class="arrow">›</span>
         </div>
 
-        <div class="settings-item" @onclick="OpenAbout">
+
+        <div class="settings-item" @onclick="() => ShowReportDialog = true">
+            <div class="item-left">
+                <img src="images/tracking.png" class="item-icon" />
+                <span>الدعم الفني</span>
+            </div>
+            <span class="arrow">›</span>
+        </div>
+
+        <div class="settings-item" @onclick="() => ShowAboutDialog = true">
             <div class="item-left">
                 <img src="images/information.png" class="item-icon" />
-                <span>حول التطبيق</span>
+                <span>حول النظام</span>
             </div>
             <span class="arrow">›</span>
         </div>
@@ -69,7 +76,7 @@
                 <span>إصدار التطبيق</span>
             </div>
             <span class="version-text">
-                SmartGrades · .NET · 1447 هـ
+                SmartGrades · .NET 10 · 2026
             </span>
         </div>
 
@@ -81,20 +88,18 @@
     </div>
 </div>
 
-<!-- ================= PROFILE ================= -->
 @if (ShowProfileDialog)
 {
     <div class="dialog-overlay">
         <div class="dialog-box">
             <h3>الملف الشخصي</h3>
-            <p><strong>الاسم:</strong> @TeacherName</p>
-            <p><strong>الدور:</strong> أستاذ</p>
+            <p><strong>الاسم:</strong> @Admin?.FullName</p>
+            <p><strong>اسم المستخدم:</strong> @Admin?.Username</p>
             <button class="dialog-close" @onclick="() => ShowProfileDialog = false">إغلاق</button>
         </div>
     </div>
 }
 
-<!-- ================= CHANGE PASSWORD ================= -->
 @if (ShowPasswordDialog)
 {
     <div class="dialog-overlay">
@@ -104,143 +109,123 @@
 
             <input type="password" placeholder="كلمة المرور الحالية" @bind="CurrentPassword" />
             <input type="password" placeholder="كلمة المرور الجديدة" @bind="NewPassword" />
-            <input type="password" placeholder="تأكيد كلمة المرور" @bind="ConfirmPassword" />
+            <input type="password" placeholder="تأكيد كلمة المرور الجديدة" @bind="ConfirmPassword" />
 
             <button class="dialog-action" @onclick="ChangePassword">حفظ</button>
-            <button class="dialog-close" @onclick="ClosePasswordDialog">إغلاق</button>
+            <button class="dialog-close" @onclick="ClosePasswordDialog">إلغاء</button>
 
         </div>
     </div>
 }
 
-<!-- ================= ANNOUNCEMENT ================= -->
-@if (ShowAnnouncementDialog)
+@if (ShowReportDialog)
 {
     <div class="dialog-overlay">
         <div class="dialog-box">
 
-            <h3>📢 إرسال إعلان (اختبار)</h3>
+            <h3>إبلاغ عن مشكلة أو ملاحظة</h3>
 
-            <p style="text-align:center;font-size:13px;color:#6b7280">
-                سيتم الإرسال إلى رقم واحد فقط للتجربة
-            </p>
+            <textarea class="dialog-textarea"
+                      rows="4"
+                      placeholder="يرجى وصف المشكلة أو الملاحظة هنا..."
+                      @bind="ReportNotes"></textarea>
 
-            <p style="text-align:center">
-                سيتم إرسال تقرير نهاية الشهر تلقائيًا
-            </p>
+            <button class="dialog-action" @onclick="SendReport">إرسال البلاغ</button>
+            <button class="dialog-close" @onclick="() => ShowReportDialog = false">إلغاء</button>
 
+        </div>
+    </div>
+}
 
-            <button class="dialog-action" @onclick="ConfirmAnnouncement">
-                إرسال
-            </button>
+@if (ShowAboutDialog)
+{
+    <div class="dialog-overlay">
+        <div class="dialog-box dialog-about">
 
-            <button class="dialog-close" @onclick="CloseAnnouncement">
-                إلغاء
+            <div class="about-main-icon">
+                <img src="images/information.png" />
+            </div>
+
+            <h3 class="about-title-black">حول النظام</h3>
+
+            <div class="about-grid">
+
+                <div class="about-box">
+                    <span class="label">اسم النظام</span>
+                    <strong>@SystemConfig?.SystemName</strong>
+                </div>
+
+                <div class="about-box">
+                    <span class="label">اسم المطور</span>
+                    <strong>رياض السيد</strong>
+                </div>
+
+                <div class="about-box">
+                    <span class="label">رقم التواصل (واتساب)</span>
+                    <strong>0910772372</strong>
+                </div>
+
+            </div>
+
+            <div class="about-footer">
+                © 2026 جميع الحقوق محفوظة
+            </div>
+
+            <button class="dialog-close"
+                    @onclick="() => ShowAboutDialog = false">
+                إغلاق
             </button>
 
         </div>
     </div>
 }
 
-@if (ShowConfirmDialog)
+@if (!string.IsNullOrEmpty(Message))
 {
     <div class="dialog-overlay">
         <div class="dialog-box">
-
-            <h3>تأكيد الإرسال</h3>
-            <p style="text-align:center">هل أنت متأكد؟</p>
-
-            <button class="dialog-action" @onclick="SendAnnouncement">
-                نعم، إرسال
-            </button>
-
-            <button class="dialog-close" @onclick="() => ShowConfirmDialog = false">
-                رجوع
-            </button>
-
-        </div>
-    </div>
-}
-
-<!-- ================= RESULT ================= -->
-@if (ShowResultDialog)
-{
-    <div class="dialog-overlay">
-        <div class="dialog-box">
-            <p style="text-align:center">@DialogMessage</p>
-            <button class="dialog-close" @onclick="CloseResultDialog">حسناً</button>
+            <p style="text-align:center">@Message</p>
+            <button class="dialog-close" @onclick="() => Message = string.Empty">حسناً</button>
         </div>
     </div>
 }
 
 @code {
+    Admin? Admin;
+    SystemSettings? SystemConfig;
 
     bool ShowProfileDialog;
     bool ShowPasswordDialog;
+    bool ShowReportDialog;
     bool ShowAboutDialog;
-
-    bool ShowAnnouncementDialog;
-    bool ShowConfirmDialog;
-    bool ShowResultDialog;
-
-    string AnnouncementText = "";
-
-    string DialogMessage = "";
 
     string CurrentPassword = "";
     string NewPassword = "";
     string ConfirmPassword = "";
+    string ReportNotes = "";
+    string Message = "";
 
-    string TeacherName => DataServices.CurrentTeacher?.FullName ?? "—";
-
-    void OpenAnnouncement()
+    protected override async Task OnInitializedAsync()
     {
-        ShowAnnouncementDialog = true;
-        AnnouncementText = "";
-    }
-
-    void CloseAnnouncement()
-    {
-        ShowAnnouncementDialog = false;
-        AnnouncementText = "";
-    }
-
-    void ConfirmAnnouncement()
-    {
-     
-
-        ShowConfirmDialog = true;
-    }
-    async Task SendAnnouncement()
-    {
-        await DataServices.SendReportToAdminAsync(
-            "📊 تقرير نهاية الشهر\nالإيرادات: 12000\nالمصروفات: 4300"
-        );
-
-        ShowConfirmDialog = false;
-        ShowAnnouncementDialog = false;
-        ShowMessage("تم إرسال التقرير");
-    }
-
-
-    
-
-    void ShowMessage(string msg)
-    {
-        DialogMessage = msg;
-        ShowResultDialog = true;
-    }
-
-    void CloseResultDialog()
-    {
-        ShowResultDialog = false;
-        DialogMessage = "";
+      
+        SystemConfig = await DataServices.GetSystemSettingsAsync();
     }
 
     async Task ChangePassword()
     {
-        var ok = await DataServices.ChangePasswordAsync(CurrentPassword, NewPassword);
-        ShowMessage(ok ? "تم التغيير" : "فشل التغيير");
+        if (NewPassword != ConfirmPassword)
+        {
+            Message = "كلمتا المرور غير متطابقتين";
+            return;
+        }
+
+        var ok = await DataServices.ChangeAdminPasswordAsync(
+            Admin!.Id,
+            CurrentPassword,
+            NewPassword
+        );
+
+        Message = ok ? "تم تغيير كلمة المرور" : "كلمة المرور الحالية غير صحيحة";
         ClosePasswordDialog();
     }
 
@@ -252,12 +237,20 @@
         ConfirmPassword = "";
     }
 
-    void OpenAbout() => ShowAboutDialog = true;
+    async Task SendReport()
+    {
+        await DataServices.SendReportToAdminAsync(ReportNotes);
+        Message = "تم إرسال البلاغ";
+        ReportNotes = "";
+        ShowReportDialog = false;
+    }
+    void GoToAdmins()
+    {
+        Nav.NavigateTo("/Admins");
+    }
 
     void Logout()
     {
-        DataServices.Logout();
         Nav.NavigateTo("/", true);
     }
-
 }

@@ -4,17 +4,20 @@ using Supabase.Postgrest.Models;
 
 namespace SmartGrades.Model
 {
-    [Table("teachers")]
-    public class Teacher : BaseModel
+    [Table("semesters")]
+    public class Semester : BaseModel
     {
         [PrimaryKey("id", false)]
         public Guid Id { get; set; }
 
-        [Column("full_name")]
-        public string FullName { get; set; } = "";
+        [Column("name")]
+        public string Name { get; set; } = "";
 
-        [Column("phone")]
-        public string? Phone { get; set; }
+        [Column("start_date")]
+        public DateTime StartDate { get; set; }
+
+        [Column("end_date")]
+        public DateTime EndDate { get; set; }
 
         [Column("is_active")]
         public bool IsActive { get; set; }
@@ -22,5 +25,6 @@ namespace SmartGrades.Model
         [Column("created_at")]
         public DateTime CreatedAt { get; set; }
     }
+
 
 }

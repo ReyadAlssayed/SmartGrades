@@ -1,0 +1,224 @@
+﻿/* ===============================
+   ADMINS PAGE
+================================ */
+.admins-page {
+    padding: 20px;
+    direction: rtl;
+}
+
+/* Title */
+.page-title {
+    text-align: center;
+    margin-bottom: 14px;
+    font-weight: 800;
+    font-size: 18px;
+}
+
+/* Add button */
+.btn-add {
+    margin-bottom: 12px;
+    padding: 8px 18px;
+    border-radius: 10px;
+    background: #2563eb;
+    color: #fff;
+    border: none;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+/* ===============================
+   TABLE
+================================ */
+.table-wrapper {
+    background: #fff;
+    border-radius: 16px;
+    overflow-x: auto; /* مهم للموبايل */
+}
+
+.admins-table {
+    width: 100%;
+    min-width: 600px; /* يمنع تكسير الأعمدة */
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+    .admins-table th,
+    .admins-table td {
+        width: 25%; /* 4 أعمدة متساوية */
+        padding: 14px;
+        text-align: center;
+        vertical-align: middle;
+        font-size: 14px;
+        white-space: nowrap;
+    }
+
+    .admins-table thead th {
+        background: #1e3a8a;
+        color: #fff;
+        font-weight: 700;
+    }
+
+    .admins-table tbody tr {
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+        .admins-table tbody tr:hover {
+            background: #f9fafb;
+        }
+
+/* ===============================
+   STATUS
+================================ */
+.status {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+    .status.active {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .status.inactive {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+/* ===============================
+   ACTIONS
+================================ */
+.actions {
+    display: flex;
+    justify-content: flex-start;
+    gap: 8px;
+    margin-right: 18px;
+}
+
+.btn-edit {
+    background: #2563eb;
+    color: #fff;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.btn-delete {
+    background: #dc2626;
+    color: #fff;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+/* ===============================
+   DIALOGS
+================================ */
+.dialog-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.dialog-box {
+    width: 92%;
+    max-width: 360px;
+    background: #fff;
+    border-radius: 18px;
+    padding: 20px;
+    text-align: center;
+}
+
+    .dialog-box input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 10px;
+        border: 1px solid #d1d5db;
+        font-size: 14px;
+    }
+
+.check-row {
+    display: flex;
+    align-items: center; /* محاذاة عمودية صحيحة */
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    font-size: 14px;
+}
+
+    .check-row label {
+        display: flex;
+        align-items: center; /* النص والـ checkbox في نفس السطر */
+        gap: 8px;
+        cursor: pointer;
+    }
+
+    .check-row input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+        margin: 0; /* يمنع النزول */
+    }
+
+
+/* Errors */
+.form-error {
+    color: #dc2626;
+    font-size: 13px;
+    margin-bottom: 6px;
+}
+
+/* Dialog buttons */
+.dialog-action {
+    width: 100%;
+    padding: 10px;
+    border-radius: 12px;
+    border: none;
+    background: #2563eb;
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+    .dialog-action.danger {
+        background: #dc2626;
+    }
+
+.dialog-close {
+    width: 100%;
+    padding: 10px;
+    border-radius: 12px;
+    border: none;
+    background: #e5e7eb;
+    margin-top: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* ===============================
+   MOBILE FIXES
+================================ */
+@media (max-width: 480px) {
+    .page-title {
+        font-size: 16px;
+    }
+
+    .btn-add {
+        width: 100%;
+    }
+
+    .actions {
+        margin-right: 0;
+        justify-content: center;
+    }
+}

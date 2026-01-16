@@ -1,18 +1,47 @@
-﻿@page "/Home"
+﻿@page "/"
 @layout MainLayout
-
 @inject SmartGrades.Services.DataServices DataServices
 
-<div class="home-page">
-    <div class="home-hero animate-hero">
+<div class="home-simple">
 
-        <h1 class="home-title">
-            مرحبا أستاذ @DataServices.CurrentTeacher?.FullName
-        </h1>
-
-        <h1 class="home-title">
-            الجبل العالي
-        </h1>
-
+    <!-- أيقونة -->
+    <div class="home-icon">
+        <i class="fas fa-graduation-cap"></i>
     </div>
+
+    <!-- العنوان -->
+    <h1 class="home-title-main">
+        الجبل العالي
+    </h1>
+
+    <div class="home-line"></div>
+
+    <!-- الترحيب -->
+    <h2 class="home-welcome">
+        مرحباً: @AdminName
+    </h2>
+
+  
+
+    <hr class="home-divider" />
+
+    <p class="home-hint">
+        النظام متاح للاستخدام، يرجى اختيار الخدمة المطلوبة من القائمة الجانبية.
+    </p>
+
+    <!-- الحقوق -->
+    <footer class="home-footer">
+        © 2026 معهد الجبل العالي – جميع الحقوق محفوظة
+    </footer>
+
 </div>
+
+@code {
+    string AdminName = "—";
+
+    protected override async Task OnInitializedAsync()
+    {
+       
+       
+    }
+}

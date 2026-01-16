@@ -1,0 +1,211 @@
+﻿@page "/Admins"
+@layout MainLayout
+@using SmartGrades.Model
+@inject SmartGrades.Services.DataServices DataServices
+
+<div class="admins-page">
+
+    <h2 class="page-title">إدارة المسؤولين</h2>
+
+    <button class="btn-add" @onclick="OpenAddDialog">
+        إضافة مسؤول
+    </button>
+
+    <div class="table-wrapper">
+        <table class="admins-table">
+            <thead>
+                <tr>
+                    <th>الاسم الكامل</th>
+                    <th>اسم المستخدم</th>
+                    <th>آخر تسجيل دخول</th>
+                    <th>الحالة</th>
+                    <th>الإجراءات</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (AdminsList == null)
+                {
+                    <tr>
+                        <td colspan="5">جاري التحميل...</td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var admin in AdminsList)
+                    {
+                        <tr>
+                            <td>@admin.FullName</td>
+                            <td>@admin.Username</td>
+                            <td>
+                                @(admin.LastLoginAt == null
+                                                        ? "—"
+                                                        : admin.LastLoginAt.Value.ToString("yyyy-MM-dd HH:mm"))
+                            </td>
+                            <td>
+                                <span class="status @(admin.IsActive ? "active" : "inactive")">
+                                    @(admin.IsActive ? "نشط" : "غير نشط")
+                                </span>
+                            </td>
+                            <td class="actions">
+                                <button class="btn-edit"
+                                        @onclick="() => OpenEditDialog(admin)">
+                                    تعديل
+                                </button>
+                                <button class="btn-delete"
+                                        @onclick="() => OpenDeleteDialog(admin)">
+                                    حذف
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@if (ShowFormDialog)
+{
+    <div class="dialog-overlay">
+        <div class="dialog-box">
+
+            <h3>@(IsEdit ? "تعديل مسؤول" : "إضافة مسؤول")</h3>
+
+            <input placeholder="الاسم الكامل"
+                   @bind="FormAdmin.FullName" />
+
+            <input placeholder="اسم المستخدم"
+                   @bind="FormAdmin.Username" />
+
+            <div class="check-row">
+                <label>
+                    مسؤول نشط
+                    <input type="checkbox" @bind="FormAdmin.IsActive" />
+                </label>
+            </div>
+
+            @if (!string.IsNullOrEmpty(FormError))
+            {
+                <div class="form-error">@FormError</div>
+            }
+
+            <button class="dialog-action" @onclick="SaveAdmin">
+                حفظ
+            </button>
+
+            <button class="dialog-close" @onclick="CloseForm">
+                إلغاء
+            </button>
+        </div>
+    </div>
+}
+
+@if (ShowDeleteDialog)
+{
+    <div class="dialog-overlay">
+        <div class="dialog-box">
+
+            <h3>تأكيد الحذف</h3>
+
+            <p>
+                هل تريد حذف
+                <strong>@SelectedAdmin?.FullName</strong> ؟
+            </p>
+
+            <button class="dialog-action danger"
+                    @onclick="ConfirmDelete">
+                حذف
+            </button>
+
+            <button class="dialog-close"
+                    @onclick="CloseDelete">
+                إلغاء
+            </button>
+        </div>
+    </div>
+}
+
+@code {
+
+    List<Admin>? AdminsList;
+
+    bool ShowFormDialog;
+    bool ShowDeleteDialog;
+    bool IsEdit;
+
+    Admin FormAdmin = new();
+    Admin? SelectedAdmin;
+
+    string FormError = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        AdminsList = await DataServices.GetAdminsAsync();
+    }
+
+    void OpenAddDialog()
+    {
+        IsEdit = false;
+        FormError = "";
+
+        FormAdmin = new Admin
+        {
+            FullName = "",
+            Username = "",
+            IsActive = true
+        };
+
+        ShowFormDialog = true;
+    }
+
+    void OpenEditDialog(Admin admin)
+    {
+        IsEdit = true;
+        FormError = "";
+
+        FormAdmin = new Admin
+        {
+            Id = admin.Id,
+            FullName = admin.FullName,
+            Username = admin.Username,
+            IsActive = admin.IsActive
+        };
+
+        ShowFormDialog = true;
+    }
+
+    async Task SaveAdmin()
+    {
+        if (string.IsNullOrWhiteSpace(FormAdmin.FullName) ||
+            string.IsNullOrWhiteSpace(FormAdmin.Username))
+        {
+            FormError = "الحقول لا يمكن أن تكون فارغة";
+            return;
+        }
+
+        if (IsEdit)
+            await DataServices.UpdateAdminAsync(FormAdmin);
+        else
+            await DataServices.AddAdminAsync(FormAdmin);
+
+        ShowFormDialog = false;
+        AdminsList = await DataServices.GetAdminsAsync();
+    }
+
+    void CloseForm() => ShowFormDialog = false;
+
+    void OpenDeleteDialog(Admin admin)
+    {
+        SelectedAdmin = admin;
+        ShowDeleteDialog = true;
+    }
+
+    async Task ConfirmDelete()
+    {
+        await DataServices.DeleteAdminAsync(SelectedAdmin!.Id);
+        ShowDeleteDialog = false;
+        AdminsList = await DataServices.GetAdminsAsync();
+    }
+
+    void CloseDelete() => ShowDeleteDialog = false;
+}
