@@ -7,6 +7,14 @@ namespace SmartGrades.Services
     public class DataServices
     {
         private Client? _client;
+        // =========================
+        // Admin (Temporary)
+        // =========================
+        private const string AdminName = "رياض السيد";
+        private const string AdminTelegramChatId = "6321706551";
+        private const string TelegramToken =
+            "8292571055:AAHnhwIYwEuA7_TgFgRKl7m6Q64khsc2UMY";
+
 
         // =========================
         // Session (Current Teacher)
@@ -318,15 +326,22 @@ namespace SmartGrades.Services
                 return null;
             }
         }
-        public async Task<bool> UpdateSubjectAsync(Subjects subject)
+        public async Task SendReportToAdminAsync(string message)
         {
-            await EnsureClientAsync();
+            // Chat ID الخاص بك (تجربة)
+            string adminChatId = "6321706551";
 
-            var response = await _client!
-                .From<Subjects>()
-                .Update(subject);
+            // Token البوت
+            string token = "8292571055:AAHnhwIYwEuA7_TgFgRKl7m6Q64khsc2UMY";
 
-            return response.Models.Any();
+            using var http = new HttpClient();
+
+            var url =
+                $"https://api.telegram.org/bot{token}/sendMessage" +
+                $"?chat_id={adminChatId}" +
+                $"&text={Uri.EscapeDataString(message)}";
+
+            await http.GetAsync(url);
         }
 
 

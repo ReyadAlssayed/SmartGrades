@@ -311,4 +311,49 @@
     color: #6b7280; /* رمادي هادئ */
     letter-spacing: 1px; /* توسعة الحروف (مهم) */
 }
+/* ================= Announcement Dialog ================= */
+
+.dialog-announce {
+    max-width: 480px;
+}
+
+.dialog-label {
+    font-size: 13px;
+    font-weight: 700;
+    margin: 10px 0 6px;
+    display: block;
+    color: #334155;
+}
+
+.dialog-select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #d1d5db;
+    font-size: 14px;
+    margin-bottom: 10px;
+    background: #fff;
+}
+
+.dialog-textarea {
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid #d1d5db;
+    font-size: 14px;
+    resize: none;
+    margin-bottom: 10px;
+}
+
+    .dialog-textarea:focus,
+    .dialog-select:focus {
+        outline: none;
+        border-color: #2563eb;
+    }
+
+/* زر الإرسال */
+.dialog-action:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
 

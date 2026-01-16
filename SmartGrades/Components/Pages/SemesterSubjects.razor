@@ -201,7 +201,7 @@ else
         subject.SubjectName = name;
         subject.LecturePrice = DialogPrice;
 
-        await DataServices.UpdateSubjectAsync(subject);
+      
 
         SubjectsInSemester =
             await DataServices.GetSubjectsBySemesterAsync(SemesterId);

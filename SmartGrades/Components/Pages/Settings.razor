@@ -27,10 +27,8 @@
         الحساب والإعدادات
     </div>
 
-
     <!-- ================= SETTINGS LIST ================= -->
     <div class="settings-list">
-
 
         <div class="settings-item" @onclick="() => ShowProfileDialog = true">
             <div class="item-left">
@@ -44,6 +42,15 @@
             <div class="item-left">
                 <img src="images/password.png" class="item-icon" />
                 <span>تغيير كلمة المرور</span>
+            </div>
+            <span class="arrow">›</span>
+        </div>
+
+        <!-- 🔹 إرسال إعلان -->
+        <div class="settings-item" @onclick="OpenAnnouncement">
+            <div class="item-left">
+                <img src="images/announcement.png" class="item-icon" />
+                <span>إرسال إعلان (تجربة)</span>
             </div>
             <span class="arrow">›</span>
         </div>
@@ -62,10 +69,9 @@
                 <span>إصدار التطبيق</span>
             </div>
             <span class="version-text">
-                SmartGrades · .NET 10 MAUI · 1447 هـ
+                SmartGrades · .NET · 1447 هـ
             </span>
         </div>
-
 
         <button class="logout-btn" @onclick="Logout">
             <img src="images/logout.png" class="logout-icon" />
@@ -75,26 +81,20 @@
     </div>
 </div>
 
-<!-- ================= PROFILE DIALOG ================= -->
+<!-- ================= PROFILE ================= -->
 @if (ShowProfileDialog)
 {
     <div class="dialog-overlay">
         <div class="dialog-box">
-
             <h3>الملف الشخصي</h3>
-
             <p><strong>الاسم:</strong> @TeacherName</p>
             <p><strong>الدور:</strong> أستاذ</p>
-
-            <button class="dialog-close" @onclick="() => ShowProfileDialog = false">
-                إغلاق
-            </button>
-
+            <button class="dialog-close" @onclick="() => ShowProfileDialog = false">إغلاق</button>
         </div>
     </div>
 }
 
-<!-- ================= CHANGE PASSWORD DIALOG ================= -->
+<!-- ================= CHANGE PASSWORD ================= -->
 @if (ShowPasswordDialog)
 {
     <div class="dialog-overlay">
@@ -102,96 +102,90 @@
 
             <h3>تغيير كلمة المرور</h3>
 
-            <input type="password"
-                   placeholder="كلمة المرور الحالية"
-                   @bind="CurrentPassword" />
+            <input type="password" placeholder="كلمة المرور الحالية" @bind="CurrentPassword" />
+            <input type="password" placeholder="كلمة المرور الجديدة" @bind="NewPassword" />
+            <input type="password" placeholder="تأكيد كلمة المرور" @bind="ConfirmPassword" />
 
-            <input type="password"
-                   placeholder="كلمة المرور الجديدة"
-                   @bind="NewPassword" />
-
-            <input type="password"
-                   placeholder="تأكيد كلمة المرور الجديدة"
-                   @bind="ConfirmPassword" />
-
-            <button class="dialog-action" @onclick="ChangePassword">
-                حفظ التغيير
-            </button>
-
-            <button class="dialog-close" @onclick="ClosePasswordDialog">
-                إغلاق
-            </button>
+            <button class="dialog-action" @onclick="ChangePassword">حفظ</button>
+            <button class="dialog-close" @onclick="ClosePasswordDialog">إغلاق</button>
 
         </div>
     </div>
 }
 
-<!-- ================= ABOUT DIALOG ================= -->
-@if (ShowAboutDialog)
+<!-- ================= ANNOUNCEMENT ================= -->
+@if (ShowAnnouncementDialog)
 {
     <div class="dialog-overlay">
-        <div class="dialog-box dialog-large">
+        <div class="dialog-box">
 
-            <h3>حول SmartGrades</h3>
+            <h3>📢 إرسال إعلان (اختبار)</h3>
 
-            <video class="about-video"
-                   preload="metadata"
-                   autoplay
-                   muted
-                   playsinline
-                   controls
-                   @onended="OnVideoEnded">
-                <source src="images/video1.mp4" type="video/mp4" />
-                المتصفح لا يدعم تشغيل الفيديو
-            </video>
+            <p style="text-align:center;font-size:13px;color:#6b7280">
+                سيتم الإرسال إلى رقم واحد فقط للتجربة
+            </p>
 
-            @if (ShowAboutText)
-            {
-                <div class="about-text">
-                    SmartGrades نظام ذكي لإدارة الدرجات ومتابعة الطلاب،
-                    صُمم ليكون بسيطًا، سريعًا، وآمنًا للأساتذة.
-                </div>
-            }
+            <p style="text-align:center">
+                سيتم إرسال تقرير نهاية الشهر تلقائيًا
+            </p>
 
-            <button class="dialog-close" @onclick="CloseAbout">
-                إغلاق
+
+            <button class="dialog-action" @onclick="ConfirmAnnouncement">
+                إرسال
+            </button>
+
+            <button class="dialog-close" @onclick="CloseAnnouncement">
+                إلغاء
             </button>
 
         </div>
     </div>
 }
 
-<!-- ================= RESULT DIALOG (SUCCESS / ERROR) ================= -->
+@if (ShowConfirmDialog)
+{
+    <div class="dialog-overlay">
+        <div class="dialog-box">
+
+            <h3>تأكيد الإرسال</h3>
+            <p style="text-align:center">هل أنت متأكد؟</p>
+
+            <button class="dialog-action" @onclick="SendAnnouncement">
+                نعم، إرسال
+            </button>
+
+            <button class="dialog-close" @onclick="() => ShowConfirmDialog = false">
+                رجوع
+            </button>
+
+        </div>
+    </div>
+}
+
+<!-- ================= RESULT ================= -->
 @if (ShowResultDialog)
 {
     <div class="dialog-overlay">
-        <div class="dialog-box @DialogType">
-
-            <div class="dialog-icon">
-                @(DialogType == "success" ? "✔" : "✖")
-            </div>
-
-            <p>@DialogMessage</p>
-
-            <button class="dialog-close" @onclick="CloseResultDialog">
-                حسناً
-            </button>
-
+        <div class="dialog-box">
+            <p style="text-align:center">@DialogMessage</p>
+            <button class="dialog-close" @onclick="CloseResultDialog">حسناً</button>
         </div>
     </div>
 }
 
 @code {
 
-    // ================= STATE =================
-    bool ShowProfileDialog = false;
-    bool ShowPasswordDialog = false;
-    bool ShowAboutDialog = false;
-    bool ShowAboutText = false;
+    bool ShowProfileDialog;
+    bool ShowPasswordDialog;
+    bool ShowAboutDialog;
 
-    bool ShowResultDialog = false;
+    bool ShowAnnouncementDialog;
+    bool ShowConfirmDialog;
+    bool ShowResultDialog;
+
+    string AnnouncementText = "";
+
     string DialogMessage = "";
-    string DialogType = ""; // success | error
 
     string CurrentPassword = "";
     string NewPassword = "";
@@ -199,58 +193,54 @@
 
     string TeacherName => DataServices.CurrentTeacher?.FullName ?? "—";
 
-    // ================= ABOUT =================
-    void OpenAbout()
+    void OpenAnnouncement()
     {
-        ShowAboutDialog = true;
-        ShowAboutText = false;
+        ShowAnnouncementDialog = true;
+        AnnouncementText = "";
     }
 
-    void OnVideoEnded()
+    void CloseAnnouncement()
     {
-        ShowAboutText = true;
+        ShowAnnouncementDialog = false;
+        AnnouncementText = "";
     }
 
-    void CloseAbout()
+    void ConfirmAnnouncement()
     {
-        ShowAboutDialog = false;
-        ShowAboutText = false;
+     
+
+        ShowConfirmDialog = true;
     }
-
-    // ================= PASSWORD =================
-    async Task ChangePassword()
+    async Task SendAnnouncement()
     {
-        if (string.IsNullOrWhiteSpace(CurrentPassword))
-        {
-            ShowError("أدخل كلمة المرور الحالية");
-            return;
-        }
-
-        if (NewPassword.Length < 6 || NewPassword.Length > 30)
-        {
-            ShowError("كلمة المرور الجديدة يجب أن تكون بين 6 و 30 حرفًا");
-            return;
-        }
-
-        if (NewPassword != ConfirmPassword)
-        {
-            ShowError("كلمتا المرور غير متطابقتين");
-            return;
-        }
-
-        var success = await DataServices.ChangePasswordAsync(
-            CurrentPassword,
-            NewPassword
+        await DataServices.SendReportToAdminAsync(
+            "📊 تقرير نهاية الشهر\nالإيرادات: 12000\nالمصروفات: 4300"
         );
 
-        if (!success)
-        {
-            ShowError("كلمة المرور الحالية غير صحيحة");
-            return;
-        }
+        ShowConfirmDialog = false;
+        ShowAnnouncementDialog = false;
+        ShowMessage("تم إرسال التقرير");
+    }
 
-        ShowSuccess("تم تغيير كلمة المرور بنجاح");
 
+    
+
+    void ShowMessage(string msg)
+    {
+        DialogMessage = msg;
+        ShowResultDialog = true;
+    }
+
+    void CloseResultDialog()
+    {
+        ShowResultDialog = false;
+        DialogMessage = "";
+    }
+
+    async Task ChangePassword()
+    {
+        var ok = await DataServices.ChangePasswordAsync(CurrentPassword, NewPassword);
+        ShowMessage(ok ? "تم التغيير" : "فشل التغيير");
         ClosePasswordDialog();
     }
 
@@ -262,32 +252,12 @@
         ConfirmPassword = "";
     }
 
-    // ================= RESULT =================
-    void ShowError(string text)
-    {
-        DialogMessage = text;
-        DialogType = "error";
-        ShowResultDialog = true;
-    }
+    void OpenAbout() => ShowAboutDialog = true;
 
-    void ShowSuccess(string text)
-    {
-        DialogMessage = text;
-        DialogType = "success";
-        ShowResultDialog = true;
-    }
-
-    void CloseResultDialog()
-    {
-        ShowResultDialog = false;
-        DialogMessage = "";
-        DialogType = "";
-    }
-
-    // ================= LOGOUT =================
     void Logout()
     {
         DataServices.Logout();
         Nav.NavigateTo("/", true);
     }
+
 }
