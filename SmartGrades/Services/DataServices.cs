@@ -203,14 +203,14 @@ namespace SmartGrades.Services
             return true;
         }
 
-        public async Task<Admin?> LoginAsync(string username, string password)
+        public async Task<Admin?> LoginAsync(string name, string password)
         {
             await EnsureClientAsync();
 
             var result = await _client!
                 .From<Admin>()
                 .Where(a =>
-                    a.Username == username &&
+                    a.FullName == name &&
                     a.PasswordHash == password &&
                     a.IsActive == true)
                 .Get();

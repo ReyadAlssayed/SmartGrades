@@ -94,6 +94,17 @@ a, .btn-link {
     animation: textFade 2s ease-in-out infinite;
 }
 
+/* FIX TABLE CLIPPING WITHOUT TOUCHING BOTTOM NAV */
+.page-content {
+    overflow-x: visible; /* „Â„ */
+}
+
+.admins-page {
+    margin-left: -16px;
+    margin-right: -16px;
+}
+
+
 /* Õ—ﬂ… Œ›Ì›… Ãœ« */
 @keyframes textFade {
     0% {

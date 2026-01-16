@@ -1,224 +1,123 @@
-﻿/* ===============================
-   ADMINS PAGE
-================================ */
+﻿/* الحاوية الأساسية */
 .admins-page {
-    padding: 20px;
+    padding: 30px;
     direction: rtl;
+    background-color: #f8fafc;
+    min-height: 100vh;
+
 }
 
-/* Title */
+
 .page-title {
-    text-align: center;
-    margin-bottom: 14px;
-    font-weight: 800;
-    font-size: 18px;
+    text-align: center; /* لجعل النص في المنتصف */
+    margin-top: 30px; /* لإزاحة النص للأسفل (يمكنك زيادة الرقم حسب رغبتك) */
+    margin-bottom: 40px; /* مسافة بسيطة بين العنوان والجدول */
+    color: blue; /* لون غامق احترافي */
+    font-weight: bold;
 }
-
-/* Add button */
-.btn-add {
-    margin-bottom: 12px;
-    padding: 8px 18px;
-    border-radius: 10px;
-    background: #2563eb;
-    color: #fff;
-    border: none;
-    font-weight: 700;
-    cursor: pointer;
-}
-
-/* ===============================
-   TABLE
-================================ */
 .table-wrapper {
-    background: #fff;
-    border-radius: 16px;
-    overflow-x: auto; /* مهم للموبايل */
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    overflow: hidden !important; /* إخفاء المحتوى الزائد */
+    /* منع ظهور شريط التمرير في جميع المتصفحات */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
 }
 
+    /* إخفاء شريط التمرير في Chrome و Safari */
+    .table-wrapper::-webkit-scrollbar {
+        display: none;
+    }
+
+/* تعديل بسيط لضمان عدم خروج الجدول عن الحدود */
 .admins-table {
     width: 100%;
-    min-width: 600px; /* يمنع تكسير الأعمدة */
     border-collapse: collapse;
     table-layout: fixed;
+    margin: 0;
 }
 
-    .admins-table th,
-    .admins-table td {
-        width: 25%; /* 4 أعمدة متساوية */
-        padding: 14px;
-        text-align: center;
-        vertical-align: middle;
-        font-size: 14px;
-        white-space: nowrap;
+    /* توزيع مساحات الأعمدة */
+    .admins-table th:nth-child(1), .admins-table td:nth-child(1) {
+        width: 20%;
     }
 
+    .admins-table th:nth-child(2), .admins-table td:nth-child(2) {
+        width: 20%;
+    }
+
+    .admins-table th:nth-child(3), .admins-table td:nth-child(3) {
+        width: 20%;
+    }
+
+    .admins-table th:nth-child(4), .admins-table td:nth-child(4) {
+        width: 20%;
+    }
+
+    .admins-table th:nth-child(5), .admins-table td:nth-child(5) {
+        width: 20%;
+    }
+
+    /* العناوين: أسود، توسيط، وخطوط طولية */
     .admins-table thead th {
-        background: #1e3a8a;
-        color: #fff;
-        font-weight: 700;
+        padding: 20px;
+        text-align: center;
+        color: #000000 !important;
+        font-size: 0.95rem;
+        font-weight: bold;
+        border: 1px solid #ced4da !important; /* الخطوط الطولية والعرضية للرأس */
+        background-color: #ffffff;
     }
 
-    .admins-table tbody tr {
-        border-bottom: 1px solid #e5e7eb;
+    /* السجلات: ألوان متبادلة، توسيط، وخطوط طولية */
+    .admins-table tbody td {
+        padding: 22px 20px;
+        color: #334155;
+        font-size: 0.95rem;
+        vertical-align: middle;
+        text-align: center;
+        border: 1px solid #eee !important; /* الخطوط الطولية والعرضية للسجلات */
     }
 
-        .admins-table tbody tr:hover {
-            background: #f9fafb;
-        }
 
-/* ===============================
-   STATUS
-================================ */
-.status {
-    display: inline-block;
-    padding: 4px 10px;
-    border-radius: 6px;
-    font-size: 12px;
-    font-weight: 700;
-}
-
-    .status.active {
-        background: #dcfce7;
-        color: #166534;
-    }
-
-    .status.inactive {
-        background: #fee2e2;
-        color: #991b1b;
-    }
-
-/* ===============================
-   ACTIONS
-================================ */
-.actions {
-    display: flex;
-    justify-content: flex-start;
-    gap: 8px;
-    margin-right: 18px;
-}
-
+/* أزرار الإجراءات */
 .btn-edit {
-    background: #2563eb;
-    color: #fff;
+    background: #eff6ff !important;
+    color: #3b82f6 !important;
     border: none;
-    padding: 6px 12px;
-    border-radius: 8px;
-    font-size: 13px;
+    padding: 8px 15px;
+    border-radius: 6px;
+    font-weight: 500;
     cursor: pointer;
 }
 
 .btn-delete {
-    background: #dc2626;
-    color: #fff;
+    background: #fff1f2 !important;
+    color: #f43f5e !important;
     border: none;
-    padding: 6px 12px;
-    border-radius: 8px;
-    font-size: 13px;
+    padding: 8px 15px;
+    border-radius: 6px;
+    font-weight: 500;
     cursor: pointer;
 }
 
-/* ===============================
-   DIALOGS
-================================ */
-.dialog-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,.45);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 2000;
-}
-
-.dialog-box {
-    width: 92%;
-    max-width: 360px;
-    background: #fff;
-    border-radius: 18px;
-    padding: 20px;
-    text-align: center;
-}
-
-    .dialog-box input {
-        width: 100%;
-        padding: 10px;
-        margin-bottom: 10px;
-        border-radius: 10px;
-        border: 1px solid #d1d5db;
-        font-size: 14px;
-    }
-
-.check-row {
-    display: flex;
-    align-items: center; /* محاذاة عمودية صحيحة */
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 12px;
-    font-size: 14px;
-}
-
-    .check-row label {
-        display: flex;
-        align-items: center; /* النص والـ checkbox في نفس السطر */
-        gap: 8px;
-        cursor: pointer;
-    }
-
-    .check-row input[type="checkbox"] {
-        width: 16px;
-        height: 16px;
-        margin: 0; /* يمنع النزول */
-    }
-
-
-/* Errors */
-.form-error {
-    color: #dc2626;
-    font-size: 13px;
-    margin-bottom: 6px;
-}
-
-/* Dialog buttons */
-.dialog-action {
-    width: 100%;
-    padding: 10px;
-    border-radius: 12px;
-    border: none;
-    background: #2563eb;
-    color: #fff;
-    font-weight: 700;
-    cursor: pointer;
-}
-
-    .dialog-action.danger {
-        background: #dc2626;
-    }
-
-.dialog-close {
-    width: 100%;
-    padding: 10px;
-    border-radius: 12px;
-    border: none;
-    background: #e5e7eb;
-    margin-top: 8px;
+/* الحالة */
+.status {
+    padding: 4px 12px;
+    border-radius: 5px;
+    font-size: 0.75rem;
     font-weight: 600;
-    cursor: pointer;
+    display: inline-block;
 }
 
-/* ===============================
-   MOBILE FIXES
-================================ */
-@media (max-width: 480px) {
-    .page-title {
-        font-size: 16px;
+    .status.active {
+        background: #dcfce7;
+        color: #15803d;
     }
 
-    .btn-add {
-        width: 100%;
+    .status.inactive {
+        background: #fee2e2;
+        color: #b91c1c;
     }
-
-    .actions {
-        margin-right: 0;
-        justify-content: center;
-    }
-}
