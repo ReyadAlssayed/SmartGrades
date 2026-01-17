@@ -1,1 +1,348 @@
-﻿
+﻿@page "/Semesters"
+@layout MainLayout
+
+@using SmartGrades.Model
+@inject SmartGrades.Services.DataServices DataServices
+@inject NavigationManager Nav
+
+<div style="height:56px"></div>
+
+<div class="semesters-page">
+
+    <!-- ================= ACTIVE SEMESTER BAR ================= -->
+    @if (SemesterList != null)
+    {
+        var activeSemester = SemesterList.FirstOrDefault(s => s.IsActive);
+        if (activeSemester != null)
+        {
+            <div class="active-semester-bar"
+                 @onclick="() => OpenExpenseDialog(activeSemester)">
+                <span>السمستر النشط:</span>
+                <strong>@activeSemester.Name</strong>
+            </div>
+        }
+    }
+
+    <!-- ================= HEADER ================= -->
+    <div class="page-header">
+        <h2>السمسترات</h2>
+        <button class="add-btn" @onclick="OpenAddDialog">
+            إضافة سمستر
+        </button>
+    </div>
+
+    <!-- ================= LIST ================= -->
+    <div class="cards-container">
+
+        @if (SemesterList == null)
+        {
+            @for (int i = 0; i < 6; i++)
+            {
+                <div class="skeleton-card"></div>
+            }
+        }
+        else if (SemesterList.Count == 0)
+        {
+            <p>لا توجد سمسترات</p>
+        }
+        else
+        {
+            @foreach (var s in SemesterList)
+            {
+                <div class="semester-card">
+
+                    <div class="card-header">
+                        <span class="semester-name">@s.Name</span>
+
+                        <span class="status-badge @(s.IsActive ? "active" : "inactive")">
+                            @(s.IsActive ? "نشط" : "غير نشط")
+                        </span>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="date">
+                            @s.StartDate.ToString("yyyy/MM/dd")
+                            →
+                            @s.EndDate.ToString("yyyy/MM/dd")
+                        </div>
+                    </div>
+
+                    <div class="card-actions">
+                        <button class="toggle-btn"
+                                @onclick="() => ToggleStatus(s)">
+                            @(s.IsActive ? "إغلاق" : "تفعيل")
+                        </button>
+
+                        <button class="edit-btn"
+                                @onclick="() => OpenEditDialog(s)">
+                            تعديل
+                        </button>
+
+                        <button class="delete-btn"
+                                @onclick="() => OpenDeleteDialog(s)">
+                            حذف
+                        </button>
+                    </div>
+
+                </div>
+            }
+        }
+
+    </div>
+</div>
+
+<!-- ================= ADD / EDIT DIALOG ================= -->
+@if (ShowFormDialog)
+{
+    <div class="dialog-overlay">
+        <div class="dialog-box">
+
+            <h3>@DialogTitle</h3>
+
+            <input class="rtl-input"
+                   placeholder="اسم السمستر"
+                   @bind="Form.Name" />
+
+            <input type="date"
+                   class="rtl-input"
+                   @bind="Form.Start" />
+
+            <input type="date"
+                   class="rtl-input"
+                   @bind="Form.End" />
+
+            @if (!string.IsNullOrEmpty(FormError))
+            {
+                <div class="error-text">@FormError</div>
+            }
+
+            <button class="dialog-action" @onclick="SaveSemester">
+                حفظ
+            </button>
+
+            <button class="dialog-close" @onclick="CloseFormDialog">
+                إلغاء
+            </button>
+
+        </div>
+    </div>
+}
+
+<!-- ================= DELETE DIALOG ================= -->
+@if (ShowDeleteDialog)
+{
+    <div class="dialog-overlay">
+        <div class="dialog-box">
+
+            <h3>تأكيد الحذف</h3>
+
+            <p>
+                هل تريد حذف سمستر
+                <strong>@SelectedSemester?.Name</strong>؟
+            </p>
+
+            <button class="dialog-action danger" @onclick="ConfirmDelete">
+                حذف
+            </button>
+
+            <button class="dialog-close" @onclick="CloseDeleteDialog">
+                إلغاء
+            </button>
+
+        </div>
+    </div>
+}
+
+<!-- ================= EXPENSE SELECT DIALOG ================= -->
+@if (ShowExpenseDialog)
+{
+    <div class="dialog-overlay">
+        <div class="dialog-box simple">
+
+            <h3>الانتقال إلى</h3>
+
+            <button class="select-card primary"
+                    @onclick="GoToGeneralExpenses">
+                مصروفات عامة
+            </button>
+
+            <button class="select-card"
+                    @onclick="GoToTeacherExpenses">
+                مصروفات الأساتذة
+            </button>
+
+            <button class="dialog-close"
+                    @onclick="CloseExpenseDialog">
+                إلغاء
+            </button>
+
+        </div>
+    </div>
+}
+
+@code {
+
+    List<Semester>? SemesterList;
+    Semester? SelectedSemester;
+
+    bool ShowFormDialog;
+    bool ShowDeleteDialog;
+    bool ShowExpenseDialog;
+
+    string DialogTitle = "";
+    string FormError = "";
+
+    SemesterForm Form = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        SemesterList = null;
+
+        SemesterList = (await DataServices.GetSemestersAsync())
+            .OrderByDescending(s => s.StartDate)
+            .ToList();
+    }
+
+    // -------- ADD --------
+    void OpenAddDialog()
+    {
+        DialogTitle = "إضافة سمستر";
+        SelectedSemester = null;
+
+        Form = new SemesterForm
+        {
+            Name = "",
+            Start = DateTime.Today,
+            End = DateTime.Today.AddMonths(3)
+        };
+
+        FormError = "";
+        ShowFormDialog = true;
+    }
+
+    // -------- EDIT --------
+    void OpenEditDialog(Semester s)
+    {
+        DialogTitle = "تعديل سمستر";
+        SelectedSemester = s;
+
+        Form = new SemesterForm
+        {
+            Name = s.Name,
+            Start = s.StartDate.Date,
+            End = s.EndDate.Date
+        };
+
+        FormError = "";
+        ShowFormDialog = true;
+    }
+
+    void CloseFormDialog() => ShowFormDialog = false;
+
+    async Task SaveSemester()
+    {
+        if (string.IsNullOrWhiteSpace(Form.Name))
+        {
+            FormError = "اسم السمستر مطلوب";
+            return;
+        }
+
+        if (Form.End <= Form.Start)
+        {
+            FormError = "تاريخ النهاية يجب أن يكون بعد البداية";
+            return;
+        }
+
+        if (SelectedSemester == null)
+        {
+            await DataServices.AddSemesterAsync(new Semester
+            {
+                Name = Form.Name,
+                StartDate = Form.Start.Date,
+                EndDate = Form.End.Date,
+                IsActive = false
+            });
+        }
+        else
+        {
+            SelectedSemester.Name = Form.Name;
+            SelectedSemester.StartDate = Form.Start.Date;
+            SelectedSemester.EndDate = Form.End.Date;
+
+            await DataServices.UpdateSemesterAsync(SelectedSemester);
+        }
+
+        SemesterList = (await DataServices.GetSemestersAsync())
+            .OrderByDescending(s => s.StartDate)
+            .ToList();
+
+        ShowFormDialog = false;
+    }
+
+    // -------- STATUS --------
+    async Task ToggleStatus(Semester s)
+    {
+        if (!s.IsActive)
+        {
+            var active = SemesterList!.FirstOrDefault(x => x.IsActive);
+            if (active != null)
+            {
+                await DataServices.UpdateSemesterStatusAsync(active.Id, false);
+            }
+
+            await DataServices.UpdateSemesterStatusAsync(s.Id, true);
+        }
+        else
+        {
+            await DataServices.UpdateSemesterStatusAsync(s.Id, false);
+        }
+
+        SemesterList = (await DataServices.GetSemestersAsync())
+            .OrderByDescending(x => x.StartDate)
+            .ToList();
+    }
+
+    // -------- DELETE --------
+    void OpenDeleteDialog(Semester s)
+    {
+        SelectedSemester = s;
+        ShowDeleteDialog = true;
+    }
+
+    void CloseDeleteDialog() => ShowDeleteDialog = false;
+
+    async Task ConfirmDelete()
+    {
+        if (SelectedSemester != null)
+        {
+            await DataServices.DeleteSemesterAsync(SelectedSemester.Id);
+
+            SemesterList = (await DataServices.GetSemestersAsync())
+                .OrderByDescending(x => x.StartDate)
+                .ToList();
+        }
+
+        ShowDeleteDialog = false;
+    }
+
+    // -------- EXPENSE NAV --------
+    void OpenExpenseDialog(Semester s)
+    {
+        SelectedSemester = s;
+        ShowExpenseDialog = true;
+    }
+
+    void CloseExpenseDialog() => ShowExpenseDialog = false;
+
+    void GoToGeneralExpenses()
+    {
+        ShowExpenseDialog = false;
+        Nav.NavigateTo($"/GeneralExpenses/{SelectedSemester!.Id}");
+    }
+
+    void GoToTeacherExpenses()
+    {
+        ShowExpenseDialog = false;
+        Nav.NavigateTo($"/TeacherExpenses/{SelectedSemester!.Id}");
+    }
+}

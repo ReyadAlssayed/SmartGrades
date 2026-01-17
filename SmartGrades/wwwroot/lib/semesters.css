@@ -1,37 +1,45 @@
-﻿/* ================= PAGE ================= */
+﻿﻿ /* ================= PAGE ================= */
 .semesters-page {
     padding: 24px;
-    padding-top: calc(32px + var(--safe-top));
-    background: #f5f6f8;
+    padding-top: 16px;
+    background: #f8fafc;
     min-height: 100vh;
     direction: rtl;
 }
 
 /* ================= HEADER ================= */
 .page-header {
+    position: relative;
     display: flex;
-    justify-content: space-between;
+    justify-content: center; /* العنوان في المنتصف */
     align-items: center;
     margin-bottom: 24px;
 }
 
+    /* زر الإضافة ملتصق بالجانب */
+    .page-header .add-btn {
+        position: absolute;
+        right: 24px; /* لأن RTL */
+    }
+
+
     .page-header h2 {
         font-size: 22px;
         font-weight: 900;
-        color: #0f172a;
+        color: #1e293b;
     }
 
 /* ================= ADD BUTTON ================= */
 .add-btn {
-    background: linear-gradient(135deg, #1e3a8a, #2563eb, #60a5fa);
+    background: linear-gradient(135deg, #3b82f6, #1e40af);
     color: #fff;
     border: none;
-    padding: 14px 26px;
-    border-radius: 18px;
-    font-weight: 900;
+    padding: 12px 24px;
+    border-radius: 16px;
+    font-weight: 700;
     font-size: 15px;
     cursor: pointer;
-    box-shadow: 0 10px 26px rgba(37, 99, 235, 0.45);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
     .add-btn:hover {
@@ -42,124 +50,139 @@
 .cards-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 28px;
+    gap: 24px;
+    padding-inline: 24px; /* مسافة يمين ويسار */
 }
 
 /* ================= CARD ================= */
 .semester-card {
-    position: relative;
-    padding: 72px 24px 24px;
-    border-radius: 26px;
-    color: #fff;
-    background: linear-gradient(160deg, #0b1220, #020617);
-    box-shadow: 0 40px 60px rgba(0,0,0,0.45);
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
     overflow: hidden;
+    transition: all 0.3s ease;
 }
 
-
-.card-header,
-.card-body,
-.card-actions,
-.details-link {
-    position: relative;
-    z-index: 1;
-}
+    .semester-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+    }
 
 /* ================= HEADER ================= */
 .card-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e2e8f0;
 }
 
 .semester-name {
     font-size: 18px;
-    font-weight: 900;
+    font-weight: 800;
+    color: #1e293b;
 }
 
 /* ================= STATUS ================= */
 .status-badge {
-    padding: 8px 18px;
+    padding: 6px 16px;
     border-radius: 999px;
     font-size: 13px;
-    font-weight: 900;
+    font-weight: 700;
 }
 
     .status-badge.active {
-        background: linear-gradient(135deg, #22c55e, #16a34a);
+        background: #22c55e;
+        color: #fff;
     }
 
     .status-badge.inactive {
-        background: linear-gradient(135deg, #fb923c, #ea580c);
+        background: #f59e0b;
+        color: #fff;
     }
 
 /* ================= BODY ================= */
 .card-body {
-    margin-top: 10px;
+    padding: 16px 20px;
 }
 
 .date {
     font-size: 14px;
-    opacity: 0.9;
+    color: #64748b;
 }
 
 /* ================= ACTION BUTTONS ================= */
 .card-actions {
-    margin-top: 22px;
     display: flex;
-    gap: 12px;
+    gap: 8px;
+    padding: 16px 20px;
+    padding-bottom: 12px;
+    border-top: 1px solid #e2e8f0;
 }
 
 .edit-btn,
 .toggle-btn,
 .delete-btn {
     flex: 1;
-    padding: 12px;
-    border-radius: 16px;
+    padding: 10px;
+    border-radius: 12px;
     border: none;
-    font-weight: 900;
+    font-weight: 700;
+    font-size: 13px;
     cursor: pointer;
+    transition: all 0.2s ease;
 }
 
 .edit-btn {
-    background: linear-gradient(135deg, #2563eb, #1e40af);
+    background: #3b82f6;
     color: #fff;
 }
+
+    .edit-btn:hover {
+        background: #2563eb;
+    }
 
 .toggle-btn {
-    background: #e5e7eb;
-    color: #020617;
-}
-
-.delete-btn {
-    background: linear-gradient(135deg, #ef4444, #b91c1c);
+    background: #f59e0b;
     color: #fff;
 }
 
-/* ================= DETAILS (رسمي – ورقة) ================= */
+    .toggle-btn:hover {
+        background: #d97706;
+    }
+
+.delete-btn {
+    background: #ef4444;
+    color: #fff;
+}
+
+    .delete-btn:hover {
+        background: #dc2626;
+    }
+
+/* ================= DETAILS ================= */
 .details-link {
-    margin-top: 18px;
     width: 100%;
-    padding: 14px;
-    border-radius: 14px;
-    background: #ffffff;
-    color: black;
-    font-weight: 800;
-    border: 1px solid #e5e7eb;
+    padding: 14px 20px;
+    border-radius: 12px;
+    background: #3b82f6;
+    color: #fff;
+    font-weight: 700;
+    border: none;
     cursor: pointer;
-    transition: background 0.15s ease, transform 0.1s ease;
+    transition: all 0.2s ease;
 }
 
     .details-link:hover {
-        background: #f9fafb;
-        transform: translateY(-1px);
+        background: #2563eb;
     }
 
 /* ================= DIALOG ================= */
 .dialog-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0, 0, 0, 0.5);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -168,35 +191,268 @@
 
 .dialog-box {
     background: #fff;
-    border-radius: 22px;
+    border-radius: 20px;
     padding: 24px;
     width: 92%;
     max-width: 420px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
 }
 
-/* ================= RTL ================= */
+    .dialog-box h3 {
+        font-size: 18px;
+        font-weight: 800;
+        color: #1e293b;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
 .rtl-input {
     direction: rtl;
     text-align: right;
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #334155;
+    margin-bottom: 12px;
 }
 
+    .rtl-input:focus {
+        outline: none;
+        border-color: #3b82f6;
+    }
+
 .error-text {
-    color: #dc2626;
+    color: #ef4444;
     text-align: center;
     font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.dialog-action,
+.dialog-close {
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    border: none;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    margin-bottom: 8px;
+}
+
+.dialog-action {
+    background: #3b82f6;
+    color: #fff;
+}
+
+    .dialog-action:hover {
+        background: #2563eb;
+    }
+
+.dialog-close {
+    background: #64748b;
+    color: #fff;
+}
+
+    .dialog-close:hover {
+        background: #475569;
+    }
+
+/* ================= EMPTY STATE ================= */
+.semesters-page p {
+    text-align: center;
+    color: #64748b;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 40px 20px;
+    background: #f1f5f9;
+    border-radius: 16px;
+    border: 1px dashed #cbd5e1;
 }
 
 /* ================= MOBILE ================= */
 @media (max-width: 768px) {
+    .semesters-page {
+        padding: 16px;
+        padding-top: calc(16px + var(--safe-top));
+    }
+
     .cards-container {
         grid-template-columns: 1fr;
+        gap: 16px;
     }
 
     .semester-card {
-        padding: 64px 18px 22px;
+        padding: 16px;
     }
 
     .semester-name {
         font-size: 16px;
     }
+
+    .page-header h2 {
+        font-size: 20px;
+    }
+
+    .add-btn {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
 }
+.page-header {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+
+/* ================= SKELETON ================= */
+.skeleton-card {
+    height: 180px;
+    border-radius: 20px;
+    background: linear-gradient( 90deg, #e5e7eb 25%, #f3f4f6 37%, #e5e7eb 63% );
+    background-size: 400% 100%;
+    animation: shimmer 1.4s ease infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: 100% 0;
+    }
+
+    100% {
+        background-position: -100% 0;
+    }
+}
+
+/* ================= FADE TRANSITION ================= */
+.cards-container {
+    transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+    .cards-container.loading {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+
+    .cards-container.loaded {
+        opacity: 1;
+        transform: translateY(0);
+    }
+/* ================= ACTIVE SEMESTER BAR ================= */
+.active-semester-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #ecfeff;
+    border: 1px solid #67e8f9;
+    padding: 14px 18px;
+    border-radius: 16px;
+    margin: 0 24px 24px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+    .active-semester-bar .date {
+        font-weight: 500;
+        color: #475569;
+        margin-right: 8px;
+    }
+
+.quick-enter-btn {
+    background: #0284c7;
+    color: #fff;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+    .quick-enter-btn:hover {
+        background: #0369a1;
+    }
+
+/* ================= ACTIVE SEMESTER BAR ================= */
+.active-semester-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(135deg, #ecfeff, #cffafe);
+    border: 1px solid #67e8f9;
+    padding: 18px 22px;
+    border-radius: 18px;
+    margin: 0 24px 28px;
+    font-size: 16px;
+    font-weight: 800;
+    color: #0f172a;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+    .active-semester-bar:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 28px rgba(0,0,0,0.12);
+    }
+
+
+/* ================= EXPENSE SELECT DIALOG ================= */
+.dialog-box.simple {
+    padding: 32px 28px;
+    max-width: 460px;
+    border-radius: 24px;
+}
+
+    /* العنوان */
+    .dialog-box.simple h3 {
+        font-size: 22px;
+        font-weight: 900;
+        color: #0f172a;
+        margin-bottom: 28px;
+        text-align: center;
+    }
+
+/* زر اختيار نوع المصروف */
+.select-card {
+    width: 100%;
+    padding: 18px 16px;
+    border-radius: 18px;
+    border: 2px solid #e5e7eb;
+    background: #f8fafc;
+    font-size: 17px;
+    font-weight: 800;
+    color: #1e293b;
+    cursor: pointer;
+    margin-bottom: 14px;
+    transition: all 0.25s ease;
+}
+
+    /* زر رئيسي */
+    .select-card.primary {
+        background: linear-gradient(135deg, #2563eb, #1e40af);
+        color: #fff;
+        border: none;
+    }
+
+    /* Hover */
+    .select-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 26px rgba(0,0,0,0.12);
+    }
+
+/* زر الإلغاء */
+.dialog-box.simple .dialog-close {
+    margin-top: 10px;
+    background: #f1f5f9;
+    color: #334155;
+    font-size: 15px;
+    font-weight: 700;
+    border-radius: 16px;
+}
+
+    .dialog-box.simple .dialog-close:hover {
+        background: #e2e8f0;
+    }

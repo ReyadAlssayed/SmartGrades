@@ -16,7 +16,8 @@ html, body {
 .page,
 .semesters-page,
 .settings-page,
-.home-page {
+.home-page,
+.admins-page{
     padding-top: var(--safe-top);
     
 }
@@ -99,10 +100,6 @@ a, .btn-link {
     overflow-x: visible; /* ãåã */
 }
 
-.admins-page {
-    margin-left: -16px;
-    margin-right: -16px;
-}
 
 
 /* ÍÑßÉ ÎİíİÉ ÌÏğÇ */
@@ -119,3 +116,5 @@ a, .btn-link {
         opacity: 0.6;
     }
 }
+
+

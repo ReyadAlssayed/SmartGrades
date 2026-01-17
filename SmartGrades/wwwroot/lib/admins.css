@@ -1,11 +1,16 @@
-﻿/* الحاوية الأساسية */
-.admins-page {
+﻿.admins-page {
     padding: 30px;
     direction: rtl;
     background-color: #f8fafc;
     min-height: 100vh;
-
 }
+
+.admins-page {
+    overflow-x: hidden;
+}
+
+
+
 
 
 .page-title {

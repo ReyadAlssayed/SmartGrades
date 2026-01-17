@@ -229,6 +229,18 @@ namespace SmartGrades.Services
             return admin;
         }
 
+        public async Task<bool> UpdateSemesterStatusAsync(Guid semesterId, bool isActive)
+        {
+            await EnsureClientAsync();
+
+            var response = await _client!
+                .From<Semester>()
+                .Where(s => s.Id == semesterId)
+                .Set(s => s.IsActive, isActive)
+                .Update();
+
+            return response.Models.Any();
+        }
 
 
 

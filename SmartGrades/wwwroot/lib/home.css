@@ -10,7 +10,6 @@
     text-align: center;
     position: relative;
 }
-
 /* أيقونة */
 .home-icon {
     width: 80px;
@@ -22,11 +21,15 @@
     justify-content: center;
     margin-bottom: 16px;
 }
-
-    .home-icon i {
-        font-size: 34px;
-        color: #2563eb;
+    .home-icon svg {
+        width: 34px;
+        height: 34px;
+        fill: #2563eb;
     }
+
+
+
+  
 
 /* العنوان */
 .home-title-main {

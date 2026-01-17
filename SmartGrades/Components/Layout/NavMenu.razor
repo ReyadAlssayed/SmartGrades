@@ -1,27 +1,28 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">SmartGrades</a>
-    </div>
-</div>
+﻿<nav class="bottom-nav">
 
-<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
+    <NavLink href="/Archive" class="nav-item">
+        <i class="fa-solid fa-box-archive"></i>
+        <span>الأرشيف</span>
+    </NavLink>
 
-<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
-    <nav class="nav flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="weather">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
-            </NavLink>
-        </div>
-    </nav>
-</div>
+    <NavLink href="/Statistics" class="nav-item">
+        <i class="fa-solid fa-chart-column"></i>
+        <span>الإحصائيات</span>
+    </NavLink>
+
+    <NavLink href="/Students" class="nav-item">
+        <i class="fa-solid fa-user-graduate"></i>
+        <span>الطلاب</span>
+    </NavLink>
+
+    <NavLink href="/Semesters" class="nav-item">
+        <i class="fa-solid fa-calendar-days"></i>
+        <span>المصروفات</span>
+    </NavLink>
+
+    <NavLink href="/Settings" class="nav-item">
+        <i class="fa-solid fa-gear"></i>
+        <span>الإعدادات</span>
+    </NavLink>
+
+</nav>
